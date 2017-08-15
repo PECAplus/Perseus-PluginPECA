@@ -1,9 +1,5 @@
 PECA Plugin Manual
 
-[[TOC]]
-
-//ask should include additional info like run time, and other additional features? If so, where?
-
 # PECAplus Overview
 
 Protein Expression Control Analysis (PECA) is a statistical toolbox to analyze time-series multi-omics dataset where molecules in one -omics platform serve as template for synthesis of the other.  For example, PECA can analyze paired RNA and protein time series data in order to identify change points of the impact translation and protein degradation on changes in protein concentration *given* changing RNA concentrations. 
