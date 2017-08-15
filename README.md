@@ -20,7 +20,7 @@ Instructions and links to the examples can be found in this page.
       - [Variance parameter of the Gaussian Process](#variance-parameter-of-the-gaussian-process)
       - [Gaussian Process scale parameter](#gaussian-process-scale-parameter)
     - [Function Enrichment Analysis](#function-enrichment-analysis)
-      - [Biological function annotation files](#biological-function-annotation-files)
+      - [Biological Function Annotation File](#biological-function-annotation-file)
       - [Enrichment Analysis FDR Cutoff](#enrichment-analysis-fdr-cutoff)
       - [Minimum % of Genes to Consider a Pathway to Be Tested](#minimum-%25-of-genes-to-consider-a-pathway-to-be-tested)
       - [Minimum Number of Genes For Hypothesis Testing](#minimum-number-of-genes-for-hypothesis-testing)
@@ -139,7 +139,7 @@ Scaling factor that determines the smoothness of the curve (default 1.0). A smal
 
 If checked, a time-dependent functional enrichment analysis (FEA) will be performed on the output matrix of PECA and the result will be displayed as an additional output matrix (default unchecked). The resulting matrix reports the biological functions whose members are up or down-regulated at specific time points.
 
-#### Biological Function Annotation Files
+#### Biological Function Annotation File
 
 Specifies the file path of the function annotation file that should be used for the time-dependent functional enrichment analysis. 
 
