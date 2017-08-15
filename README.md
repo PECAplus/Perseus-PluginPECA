@@ -1,5 +1,7 @@
 # PECA Plugin
 
+Hello World
+
 This page is the PECA Plugin manual.
 
 Instructions and links to the examples can be found in this page.
