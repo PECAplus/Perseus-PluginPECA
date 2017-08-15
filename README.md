@@ -1,4 +1,91 @@
-PECA Plugin Manual
+# PECA Plugin
+
+This page is the PECA Plugin manual.
+
+Instructions and links to the examples can be found in this page.
+
+# Table of Contents
+
+- [PECA Plugin](#peca-plugin)
+- [Table of Contents](#table-of-contents)
+- [PECAplus Overview](#pecaplus-overview)
+- [Requirements](#requirements)
+- [PECA Core](#peca-core)
+  - [Description](#description)
+  - [Parameters](#parameters)
+    - [Working Directory](#working-directory)
+    - [About the Data](#about-the-data)
+      - [Number of Replicates](#number-of-replicates)
+    - [Smoothing](#smoothing)
+      - [Variance parameter of the Gaussian Process](#variance-parameter-of-the-gaussian-process)
+      - [Gaussian Process scale parameter](#gaussian-process-scale-parameter)
+    - [Function Enrichment Analysis](#function-enrichment-analysis)
+      - [Biological function annotation files](#biological-function-annotation-files)
+      - [Enrichment Analysis FDR Cutoff](#enrichment-analysis-fdr-cutoff)
+      - [Minimum % of Genes to Consider a Pathway to Be Tested](#minimum-%25-of-genes-to-consider-a-pathway-to-be-tested)
+      - [Minimum Number of Genes For Hypothesis Testing](#minimum-number-of-genes-for-hypothesis-testing)
+    - [Select Data](#select-data)
+      - [Gene Name Column](#gene-name-column)
+      - [Expression Series 1](#expression-series-1)
+      - [Data Input Form 1](#data-input-form-1)
+      - [Expression Series 2](#expression-series-2)
+      - [Data Input Form 2](#data-input-form-2)
+    - [MCMC Parameters](#mcmc-parameters)
+      - [MCMC Burn-In](#mcmc-burn-in)
+      - [MCMC Thinning](#mcmc-thinning)
+      - [MCMC Samples](#mcmc-samples)
+  - [Output](#output)
+    - [General Output](#general-output)
+    - [FEA Output (if FEA had been checked)](#fea-output-if-fea-had-been-checked)
+- [PECA-N](#peca-n)
+  - [Description](#description-1)
+  - [Parameters](#parameters-1)
+    - [Working Directory](#working-directory-1)
+    - [About Data](#about-data)
+    - [Smoothing](#smoothing-1)
+    - [Module Info](#module-info)
+      - [Function Annotation File](#function-annotation-file)
+      - [Minimum Size of Pathways](#minimum-size-of-pathways)
+      - [Maximum Size of Pathways](#maximum-size-of-pathways)
+      - [Enrichment Analysis FDR Cutoff](#enrichment-analysis-fdr-cutoff-1)
+      - [Minimum % of Genes to Consider a Pathway](#minimum-%25-of-genes-to-consider-a-pathway)
+      - [Minimum Number For Hypothesis Testing](#minimum-number-for-hypothesis-testing)
+    - [Select Data](#select-data-1)
+    - [MCMC Parameters](#mcmc-parameters-1)
+  - [Output](#output-1)
+- [PECA-pS](#peca-ps)
+  - [Description](#description-2)
+  - [Parameters](#parameters-2)
+    - [Working Directory](#working-directory-2)
+    - [About Data](#about-data-1)
+      - [Time Points](#time-points)
+      - [Number of Replicates](#number-of-replicates-1)
+    - [Smoothing](#smoothing-2)
+    - [Select Data](#select-data-2)
+      - [Gene Name Column](#gene-name-column-1)
+      - [Absolute mRNA Concentration Data](#absolute-mrna-concentration-data)
+      - [Data Input Form 1](#data-input-form-1-1)
+      - [PRE/REF SILAC Data](#preref-silac-data)
+      - [Data Input Form 2](#data-input-form-2-1)
+      - [NEW/REF SILAC Data](#newref-silac-data)
+      - [Data Input Form 3](#data-input-form-3)
+    - [MCMC Parameters](#mcmc-parameters-2)
+  - [Output](#output-2)
+- [PECA-R](#peca-r)
+  - [Description](#description-3)
+  - [Parameters](#parameters-3)
+    - [Working Directory](#working-directory-3)
+    - [About the Data](#about-the-data-1)
+    - [Smoothing](#smoothing-3)
+    - [Select Data](#select-data-3)
+      - [Gene Name Column](#gene-name-column-2)
+      - [mRNA Concentration Data](#mrna-concentration-data)
+      - [Data Input Form 1](#data-input-form-1-2)
+      - [Protein Concentration Data](#protein-concentration-data)
+      - [Data Input Form 2](#data-input-form-2-2)
+    - [MCMC Parameters](#mcmc-parameters-3)
+  - [Output](#output-3)
+
 
 # PECAplus Overview
 
@@ -14,7 +101,7 @@ The principal method was published [here](http://pubs.acs.org/doi/abs/10.1021/pr
 
 PERSEUS version 1.6.0.2 or above
 
-Installing the plugin: Place ‘pluginPECA.dll’ file and ‘PECAInstallations’ folder inside the bin folder where Perseus.exe is located.
+Installing the plugin: Place 'pluginPECA.dll' file and 'PECAInstallations' folder inside the bin folder where Perseus.exe is located.
 
 # PECA Core
 
@@ -48,23 +135,23 @@ Determines the variation of values from the mean (default 2.0). A small value wi
 
 Scaling factor that determines the smoothness of the curve (default 1.0). A small value will result in a function that stays close to the mean value.
 
-### Function Enrichment Analysis (FEA)
+### Function Enrichment Analysis
 
-If checked, a time-dependent functional enrichment analysis will be performed on the output matrix of PECA and the result will be displayed as an additional output matrix (default unchecked). The resulting matrix reports the biological functions whose members are up or down-regulated at specific time points.
+If checked, a time-dependent functional enrichment analysis (FEA) will be performed on the output matrix of PECA and the result will be displayed as an additional output matrix (default unchecked). The resulting matrix reports the biological functions whose members are up or down-regulated at specific time points.
 
-#### Biological function annotation files
+#### Biological Function Annotation Files
 
 Specifies the file path of the function annotation file that should be used for the time-dependent functional enrichment analysis. 
 
-*Note*: make sure this file is in Windows text file format. Windows text file uses ‘\r\n’ as the end of line character, whereas Unix uses just ‘\n’. One can produce such a file by saving an Excel files(on Windows) as ‘.txt’. 
+*Note*: make sure this file is in Windows text file format. Windows text file uses '\r\n' as the end of line character, whereas Unix uses just '\n'. One can produce such a file by saving an Excel files(on Windows) as '.txt'. 
 
-**_	File Format: _**
+***	File Format: ***
 
-*	First column named as ‘Pathwayid’, specifying the pathway IDs, e.g. GO terms*
+	First column named as 'Pathwayid', specifying the pathway IDs, e.g. GO terms
 
-*	Second column named as the same name as gene name columns provided in the parameters, specifying the genes involved*
+	Second column named as the same name as gene name columns provided in the parameters, specifying the genes involved
 
-*	Third column named as ‘pathway’, specifying the pathways involved*
+	Third column named as 'pathway', specifying the pathways involved
 
 Sample file with annotations for human genes (provide link here)
 
@@ -90,35 +177,34 @@ The selected text column will be used as the gene ID identifiers in PECA analysi
 
 The selected expression/numerical columns that should be used as expression series 1 (typically mRNA concentration data), which comes before expression series 2 (typically protein concentration data) where expression series 1 represents degradation and 2 represents synthesis.
 
-*The columns should be ordered by timepoints and then by replicates.*
+	The columns should be ordered by timepoints and then by replicates.
 
-*Order:  time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2** *
+	Order: time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2 
 
 #### Data Input Form 1 
 
 Specification for the data input form of Expression Series 1, i.e. what data transformation has been applied already (default: Raw). 
 
-Raw: unprocessed, untransformed data.
+	Raw: unprocessed, untransformed data.
 
-ln: log_e transformed data.
+	ln: log_e transformed data.
 
-log_2: log_2transformed data.
+	log_2: log_2transformed data.
 
-log_10:  log(10) transformed data.
+	log_10:  log(10) transformed data.
 
-log_custom: log_X transformed data, where X is a specified positive real value
+	log_custom: log_X transformed data, where X is a specified positive real value
 
 #### Expression Series 2
 
 The selected expression/numerical columns that should be used as expression series 2 (typically protein concentration data) which comes after expression series 1 (default: second half of expression/numerical columns).
 
-Same order as [Expression Series 1](#heading=h.6iequ8647567). The number of columns should also match expression series 1. 
-
+Same order as [Expression Series 1](#expression-series-1). The number of columns should also match expression series 1. 
 #### Data Input Form 2
 
 Specification for the data input form of Expression Series 2 (default: Raw).
 
-[Same as Data Input Form 1](#heading=h.jq3zz0efixpi)
+[Same as Data Input Form 1](#data-input-form-1)
 
 ### MCMC Parameters
 
@@ -140,47 +226,47 @@ Defines the total of number of post-burn-in samples to be recorded from MCMC (de
 
 ### General Output
 
-The text column is the gene name column provided by [Gene Name Column](#heading=h.ftah2ydkxo03).
+The text column is the gene name column provided by [Gene Name Column](#gene-name-column).
 
 The main/expression columns are the log_e transformed Expression Series 1 and Expression Series 2 data sets. 
 
 The numeric columns contain : RX, CPSX, signedCPSX, FDRX, where X is the dummy time point ranging from 0 to N-1, where N is # of time points, representing the index of the actual time points
 
-	*RX is the rate ratio** fo**r the time interval preceding the specified time point (e.g. if X = 1, then the interval is between time points **1** and **2**)*
+	RX is the rate ratio for the time interval preceding the specified time point (e.g. if X = 1, then the interval is between time points 1 and 2)
 
-*	**CPSX is the change point score in absolute value*
+	CPSX is the change point score in absolute value
 
-*	signedCPSX is the change point score with signs indicating up/down regulation**. Positive sign describes upregulation; negative sign down regulation*
+	signedCPSX is the change point score with signs indicating up/down regulation. Positive sign describes upregulation; negative sign down regulation
 
-*	FDRX is the False Discovery Rate*
+	FDRX is the False Discovery Rate
 
 NOTE: the rate ratio itself does NOT inform on the significance or direction of the change. The DIFFERENCE between consecutive rate ratios (adjacent time intervals) describes the direction of change, and the FDR the significance. 
 
 ### FEA Output (if FEA had been checked)
 
-The text column contains: the gene name column provided from [Gene Name Column](#heading=h.ftah2ydkxo03), GO_name, GO_id
+The text column contains: the gene name column provided from [Gene Name Column](#gene-name-column), GO_name, GO_id
 
-*	GO_name is the name of the Gene Ontology*
+	GO_name is the name of the Gene Ontology
 
-*	GO_id is the ID of the Gene Ontology*
+	GO_id is the ID of the Gene Ontology
 
 The numeric columns contain: MaxSig(Up), MaxSig(Down), Max(Both), GO_size, GO_size_background, GO_EdgeCount, Up(X), Down(X), Sig(X), where X is the time point
 
-*	MaxSig(Up) is the maximum value of -log10(Up(X)) for all X*
+	MaxSig(Up) is the maximum value of -log10(Up(X)) for all X
 
-*	MaxSig(Down) is the maximum value of -log10(Down(X)) for all X*
+	MaxSig(Down) is the maximum value of -log10(Down(X)) for all X
 
-*	Max(Both) is the maximum value of -log10(Sig(X)) for all X*
+	Max(Both) is the maximum value of -log10(Sig(X)) for all X
 
-*	GO_size is the number of genes in the pathway*
+	GO_size is the number of genes in the pathway
 
-*	GO_size_background is the number of genes in the pathway that appears in the experimental data*
+	GO_size_background is the number of genes in the pathway that appears in the experimental data
 
-*	Up(X) is the p-value calculated from the number of up-regulated genes*
+	Up(X) is the p-value calculated from the number of up-regulated genes
 
-*	Down(X) is the p-value calculated from the number of down-regulated genes*
+	Down(X) is the p-value calculated from the number of down-regulated genes
 
-*	Sig(X) is the p-value calculated from the number of up and down-regulated genes*
+	Sig(X) is the p-value calculated from the number of up and down-regulated genes
 
 # PECA-N
 
@@ -192,15 +278,15 @@ PECA-N (Network) module is modified from PECA to incorporate user-provided biolo
 
 ### Working Directory
 
-See [PECA Core Working Directory](#heading=h.w6ot40ipphv0)
+See [PECA Core Working Directory](#working-directory)
 
 ### About Data
 
-See [PECA Core About Data](#heading=h.blj4i5lwm1ul)
+See [PECA Core About Data](#about-data)
 
 ### Smoothing
 
-See [PECA Core Smoothing](#heading=h.cr5s5co06zir)
+See [PECA Core Smoothing](#smoothing)
 
 ### Module Info
 
@@ -208,7 +294,7 @@ Specifies info about the user-provided biological network data. Similar to PECA 
 
 #### Function Annotation File
 
-See [PECA Core Function Annotation File](#heading=h.h15d9tpk94k9)
+See [PECA Core Function Annotation File](#))
 
 #### Minimum Size of Pathways
 
@@ -250,29 +336,29 @@ For matrix 2:
 
 The text column contains: the gene name column provided from [Gene Name Column](https://docs.google.com/document/d/1v46yjeTMdryhBfDTc_f8ixbqk1OojArlNT7zquf8AUk/edit#heading=h.ftah2ydkxo03), GO_name, GO_id
 
-GO_name is the name of the Gene Ontology
+	GO_name is the name of the Gene Ontology
 
-GO_id is the ID of the Gene Ontology
+	GO_id is the ID of the Gene Ontology
 
 The numeric columns contain: MaxSig(Up), MaxSig(Down), Max(Both), GO_size, GO_size_background, GO_EdgeCount, Up(X), Down(X), Sig(X), where X is the time point
 
-MaxSig(Up) is the maximum value of -log10(Up(X)) for all X
+	MaxSig(Up) is the maximum value of -log10(Up(X)) for all X
 
-MaxSig(Down) is the maximum value of -log10(Down(X)) for all X
+	MaxSig(Down) is the maximum value of -log10(Down(X)) for all X
 
-Max(Both) is the maximum value of -log10(Sig(X))for all X
+	Max(Both) is the maximum value of -log10(Sig(X))for all X
 
-GO_size is the number of genes in the pathway
+	GO_size is the number of genes in the pathway
 
-GO_size_background is the number of genes in the pathway that appears in the experimental data
+	GO_size_background is the number of genes in the pathway that appears in the experimental data
 
-GO_EdgeCount is the sum of the number of outward edges from all the pathways considered for the given gene 
+	GO_EdgeCount is the sum of the number of outward edges from all the pathways considered for the given gene 
 
-Up(X) is the p-value calculated from the number of up-regulated genes
+	Up(X) is the p-value calculated from the number of up-regulated genes
 
-Down(X) is the p-value calculated from the number of down-regulated genes
+	Down(X) is the p-value calculated from the number of down-regulated genes
 
-Sig(X) is the p-value calculated from the number of up and down-regulated genes
+	Sig(X) is the p-value calculated from the number of up and down-regulated genes
 
 The output format is almost the same as PECA Core, but the values are different since PECA-N incorporates biological network data when inferring rate parameter changes.
 
@@ -318,23 +404,23 @@ The selected text column will be used as the gene ID identifiers in PECA analysi
 
 The selected expression/numerical columns that should be used as mRNA data.
 
-The columns should be ordered by timepoints and then by replicates.
+	The columns should be ordered by timepoints and then by replicates.
 
-Order:  time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2 
+	Order:  time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2 
 
 #### Data Input Form 1 
 
 Specification for the data input form of mRNA data, i.e. what data transformation has been applied already (default: Raw). 
 
-Raw: unprocessed, untransformed data.
+	Raw: unprocessed, untransformed data.
 
-ln: log_e transformed data.
+	ln: log_e transformed data.
 
-log_2: log_2 transformed data.
+	log_2: log_2 transformed data.
 
-log_10:  log_10 transformed data.
+	log_10:  log_10 transformed data.
 
-log_custom:  log_X transformed data, where X is a specified positive real value
+	log_custom:  log_X transformed data, where X is a specified positive real value
 
 #### PRE/REF SILAC Data 
 
@@ -378,7 +464,7 @@ The numeric columns contain: RX, DX, signedCPRX, , where X is the dummy time poi
 
 	signedCPRX is the change point score for synthesis rates
 
-signedCPDX is the change point score for degradation rates //edit here
+	signedCPDX is the change point score for degradation rates //edit here
 
 # PECA-R
 
@@ -386,7 +472,7 @@ signedCPDX is the change point score for degradation rates //edit here
 
 PECA-R (Rate) is a model that separates estimation of rate parameters from absolute concentration data, approximating synthesis and degradation rates from via two assumptions. See manuscript for PECAplus for detailed descriptions. 
 
-NOTE: if the data was derived from SILAC experiments, use PECA-pS instead. If one has SILAC data but wishes to use PECA-R for analysis, one has to derive ‘artificial’ absolute concentrations by summing over the two channels (e.g. heavy and light). 
+NOTE: if the data was derived from SILAC experiments, use PECA-pS instead. If one has SILAC data but wishes to use PECA-R for analysis, one has to derive 'artificial' absolute concentrations by summing over the two channels (e.g. heavy and light). 
 
 NOTE: the degradation rates for each interval can be easily average over the entire time course and converted to half-lives using the following formula:
 
@@ -416,23 +502,23 @@ The selected text column will be used as the gene ID identifiers in PECA analysi
 
 The selected expression/numerical columns that should be used as mRNA data.
 
-The columns should be ordered by timepoints and then by replicates.
+	The columns should be ordered by timepoints and then by replicates.
 
-*Order:  time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2 *
+	Order:  time point 1 replicate 1, … , time point N replicate 1 , time point 1 replicate 2 , … , time point N replicate 2
 
 #### Data Input Form 1 
 
 Specification for the data input form of Absolute mRNA Concentration Data, i.e. what data transformation has been applied already (default: Raw). 
 
-Raw: unprocessed, untransformed data.
+	Raw: unprocessed, untransformed data.
 
-ln: log_e transformed data.
+	ln: log_e transformed data.
 
-log_2: log_2 transformed data.
+	log_2: log_2 transformed data.
 
-log_10:  log_10 transformed data.
+	log_10:  log_10 transformed data.
 
-log_custom:  log_X transformed data, where X is a specified positive real value
+	log_custom:  log_X transformed data, where X is a specified positive real value
 
 #### Protein Concentration Data
 
@@ -453,4 +539,3 @@ See [PECA Core MCMC Parameters](#heading=h.re4q74rpxfs4)
 ## Output
 
 See [PECA-pS Output](#heading=h.ipg2h2o8u820)
-
