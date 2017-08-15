@@ -153,7 +153,7 @@ Specifies the file path of the function annotation file that should be used for 
 
 	Third column named as 'pathway', specifying the pathways involved
 
-[Sample file with annotations for human genes](#Samples/module.txt)
+[Sample file with annotations for human genes](Samples/module.txt)
 
 #### Enrichment Analysis FDR Cutoff
 
