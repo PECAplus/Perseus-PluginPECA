@@ -1,0 +1,24 @@
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\bin\Debug\PluginPECA.dll
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\bin\Debug\PluginPECA.pdb
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\bin\Debug\BaseLibS.dll
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\bin\Debug\PerseusApi.dll
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\bin\Debug\PerseusApi.xml
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\obj\Debug\PluginPECA.csprojResolveAssemblyReference.cache
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\obj\Debug\PluginPECA.dll
+c:\users\mzhangyb\documents\visual studio 2017\Projects\PluginPECA\PluginPECA\obj\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\bin\Debug\BaseLibS.dll
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PerseusApi.dll
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PerseusApi.xml
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.csprojResolveAssemblyReference.cache
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\PECA PROJECT\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\bin\Debug\BaseLibS.dll
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PerseusApi.dll
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\bin\Debug\PerseusApi.xml
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.csprojResolveAssemblyReference.cache
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.pdb
