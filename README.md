@@ -145,7 +145,7 @@ Specifies the file path of the function annotation file that should be used for 
 
 *Note*: make sure this file is in Windows text file format. Windows text file uses '\r\n' as the end of line character, whereas Unix uses just '\n'. One can produce such a file by saving an Excel files(on Windows) as '.txt'. 
 
-***	File Format: ***
+*File Format:*
 
 	First column named as 'Pathwayid', specifying the pathway IDs, e.g. GO terms
 
