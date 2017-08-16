@@ -1,6 +1,6 @@
 # PluginPECA
 
-Perseus Plugin for PECA.
+Perseus Plugin for PECA
 
 <img src="https://github.com/PECAplus/Perseus-PluginPECA/wiki/images/PECALogo.png" align="left" width="200" height="150">
 
@@ -15,5 +15,30 @@ The modules are presented mostly for the analysis of paired protein-RNA data. Ho
 The principal method was published [here](http://pubs.acs.org/doi/abs/10.1021/pr400855q) (Teo et al, *J. Prot. Res.* 2014). Additional information on the methods and the modules contained in PECAplus are described in a forthcoming manuscript. 
 
 
+## Full Documentation
+
+See the [Wiki](https://github.com/PECAplus/Perseus-PluginPECA/wiki) for full documentation and examples.
+
+## Software and Hardware Requirements
+
+64 bit Windows with .NET Framework 4.5 or higher (See [Perseus Requirements](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation))
+
+PERSEUS version 1.6.0.2 (See [Perseus Download and Installation Guide](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation#download))
+
+## Installing the plugin
+
+* [Download Perseus-PluginPECA ZIP](https://github.com/PECAplus/Perseus-PluginPECA/archive/master.zip)
+* Unzip `Perseus-PluginPECA-master.zip`
+* Locate the directory of `Perseus.exe`, which contains `bin` folder
+* Copy/Cut `pluginPECA.dll` file and `PECAInstallations` folder from `Perseus-PluginPECA-master\Plugin`
+* Paste into the `bin` folder
+
+## Bugs and Feedback //ask
+
+For bugs, questions and discussions please use the [GitHub Issues](https://github.com/PECAplus/Perseus-PluginPECA/issues).
+
+## License
+
+Still needs to be updated ...
 
 
