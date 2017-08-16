@@ -452,6 +452,8 @@ namespace PluginPECA
             return -1;
         }
 
+        //unix2dos is part of dos2unix which is released under FreeDSB
+        //go https://waterlan.home.xs4all.nl/dos2unix/COPYING.txt for full license details
         public static string ConvertUnix2Dos(string filename, ProcessInfo processInfo)
         {
             string unix2dos = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\unix2dos.exe");
