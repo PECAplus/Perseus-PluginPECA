@@ -27,7 +27,13 @@ See [Samples](https://github.com/PECAplus/Perseus-PluginPECA/tree/master/Samples
 
 PERSEUS version 1.6.0.2 (See [Perseus Download and Installation Guide](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation#download))
 
-## Installing the plugin
+## Installing
+
+Upon publication of the PECA plus paper, the plugin will be available via the Perseus website.
+
+Currently, the plugin is only distributed through github.
+
+To install through github:
 
 * [Download Perseus-PluginPECA ZIP](https://github.com/PECAplus/Perseus-PluginPECA/archive/master.zip)
 * Unzip `Perseus-PluginPECA-master.zip`
