@@ -19,7 +19,7 @@ The principal method was published [here](http://pubs.acs.org/doi/abs/10.1021/pr
 
 See the [Wiki](https://github.com/PECAplus/Perseus-PluginPECA/wiki) for full documentation.
 
-See [Samples](samples) for sample files and parameters.
+See [Samples](https://github.com/PECAplus/Perseus-PluginPECA/tree/master/Samples) for sample files and parameters.
 
 ## Requirements
 
