@@ -452,7 +452,19 @@ namespace PluginPECA
             return -1;
         }
 
+        public static string ConvertUnix2Dos(string filename, ProcessInfo processInfo)
+        {
+            string unix2dos = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\unix2dos.exe");
 
+            string filepath = "\"" + filename + "\"";
+
+            if (ExternalProcess.RunExe(unix2dos, filepath, null, processInfo.Status, processInfo.Progress, -1, -1, out string processInfoErrString) != 0)
+            {
+                return processInfoErrString;
+            }
+
+            return null;
+        }
        
 
         //function obtained from PerseusPluginLib/Rearrange/ChangeColumnType.cs
@@ -693,7 +705,7 @@ namespace PluginPECA
             data.StringColumnNames = ArrayUtils.SubList(data.StringColumnNames, nameInd);
             data.StringColumnDescriptions = ArrayUtils.SubList(data.StringColumnDescriptions, nameInd);
 
-            //hacky way of forcing the order of columns
+            //hacky way of forcing the order of columns but also possibly the only way for Perseus
             List<int> toConvert = new List<int>();
             List<int> numList = new List<int>();
             int expressInd = 0;
@@ -728,7 +740,6 @@ namespace PluginPECA
                     }
                 }
             }
-            //else warning?
 
             data.NumericColumnNames = ArrayUtils.SubList(data.NumericColumnNames, numArr);
             data.NumericColumnDescriptions = ArrayUtils.SubList(data.NumericColumnDescriptions, numArr);

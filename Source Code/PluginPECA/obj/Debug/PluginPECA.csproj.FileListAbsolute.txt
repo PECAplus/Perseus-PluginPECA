@@ -22,3 +22,11 @@ C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginP
 C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.csprojResolveAssemblyReference.cache
 C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.dll
 C:\Users\GuestAccount\Desktop\PECA Modules Project\PluginPECA\PluginPECA\PluginPECA\obj\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PluginPECA.pdb
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\BaseLibS.dll
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PerseusApi.dll
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PerseusApi.xml
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.csprojResolveAssemblyReference.cache
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.dll
+C:\Users\GuestAccount\Desktop\Github\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.pdb

@@ -120,13 +120,18 @@ namespace PluginPECA.Core
 
             ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsea);
 
-            //not sure if this will work
-            //need to test
             if (getAnalysis.Value)
             {
                 string modulePath = getAnalysis.GetSubParameters().GetParam<string>(PECAParameters.networkFile).Value;
                 string moduleDestination = Path.Combine(@workingDirectory, @"networkFile.txt");
                 File.Copy(modulePath, moduleDestination, true);
+
+                string convertErr = Utils.ConvertUnix2Dos(moduleDestination, processInfo);
+                if (convertErr != null)
+                {
+                    processInfo.ErrString = convertErr;
+                    return;
+                }
 
                 if (Utils.WriteCPSInputParam(getAnalysis.GetSubParameters(), workingDirectory) != 0)
                 {

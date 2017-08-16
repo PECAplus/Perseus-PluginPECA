@@ -38,13 +38,14 @@ namespace PluginPECA.ModuleN
 
         }
 
-        public static int WriteInputFiles(IMatrixData mdata, Parameters param, string workingDirectory, out string errString)
+        public static int WriteInputFiles(IMatrixData mdata, Parameters param, string workingDirectory, ProcessInfo processInfo, out string errString)
         {
             //moving module
             string modulePath = param.GetParam<string>(PECAParameters.networkFile).Value;
             string moduleDestination = Path.Combine(@workingDirectory, @"networkFile.txt");
             File.Copy(modulePath, moduleDestination, true);
-
+            errString = PluginPECA.Utils.ConvertUnix2Dos(moduleDestination, processInfo);
+            if (errString != null) return -1;
             return PluginPECA.Utils.WriteInputFiles(mdata, param, workingDirectory, out errString);
        
         }

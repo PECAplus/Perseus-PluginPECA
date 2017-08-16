@@ -80,7 +80,7 @@ namespace PluginPECA.ModuleN
                 return;
             }
 
-            if (Utils.WriteInputFiles(mdata, param, workingDirectory, out errString) != 0)
+            if (Utils.WriteInputFiles(mdata, param, workingDirectory, processInfo, out errString) != 0)
             {
                 processInfo.ErrString = errString;
                 return;
