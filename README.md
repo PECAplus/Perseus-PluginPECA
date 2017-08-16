@@ -1,6 +1,6 @@
 # PluginPECA
 
-<img src="https://github.com/PECAplus/Perseus-PluginPECA/wiki/images/PECALogo.png" align="left" hspace="10" vspace="5">
+<img src="https://github.com/PECAplus/Perseus-PluginPECA/wiki/images/PECALogo.png" align="left" hspace="10" vspace="8">
 
 Perseus Plugin for **Protein Expression Control Analysis** (**PECA**).
 
