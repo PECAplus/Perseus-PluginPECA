@@ -6,87 +6,6 @@ Instructions and links to the examples can be found in this page.
 
 # Table of Contents
 
-- [PECA Plugin](#peca-plugin)
-- [Table of Contents](#table-of-contents)
-- [PECAplus Overview](#pecaplus-overview)
-- [Requirements](#requirements)
-- [PECA Core](#peca-core)
-  - [Description](#description)
-  - [Parameters](#parameters)
-    - [Working Directory](#working-directory)
-    - [About the Data](#about-the-data)
-      - [Number of Replicates](#number-of-replicates)
-    - [Smoothing](#smoothing)
-      - [Variance parameter of the Gaussian Process](#variance-parameter-of-the-gaussian-process)
-      - [Gaussian Process scale parameter](#gaussian-process-scale-parameter)
-    - [Function Enrichment Analysis (FEA)](#function-enrichment-analysis-fea)
-      - [Biological Function Annotation File](#biological-function-annotation-file)
-      - [Enrichment Analysis FDR Cutoff](#enrichment-analysis-fdr-cutoff)
-      - [Minimum % of Genes to Consider a Pathway to Be Tested](#minimum-%25-of-genes-to-consider-a-pathway-to-be-tested)
-      - [Minimum Number of Genes For Hypothesis Testing](#minimum-number-of-genes-for-hypothesis-testing)
-    - [Select Data](#select-data)
-      - [Gene Name Column](#gene-name-column)
-      - [Expression Series 1](#expression-series-1)
-      - [Data Input Form 1](#data-input-form-1)
-      - [Expression Series 2](#expression-series-2)
-      - [Data Input Form 2](#data-input-form-2)
-    - [MCMC Parameters](#mcmc-parameters)
-      - [MCMC Burn-In](#mcmc-burn-in)
-      - [MCMC Thinning](#mcmc-thinning)
-      - [MCMC Samples](#mcmc-samples)
-  - [Output](#output)
-    - [General Output](#general-output)
-    - [FEA Output (if FEA had been checked)](#fea-output-if-fea-had-been-checked)
-- [PECA-N](#peca-n)
-  - [Description](#description-1)
-  - [Parameters](#parameters-1)
-    - [Working Directory](#working-directory-1)
-    - [About Data](#about-data)
-    - [Smoothing](#smoothing-1)
-    - [Module Info](#module-info)
-      - [Function Annotation File](#function-annotation-file)
-      - [Minimum Size of Pathways](#minimum-size-of-pathways)
-      - [Maximum Size of Pathways](#maximum-size-of-pathways)
-      - [Enrichment Analysis FDR Cutoff](#enrichment-analysis-fdr-cutoff-1)
-      - [Minimum % of Genes to Consider a Pathway](#minimum-%25-of-genes-to-consider-a-pathway)
-      - [Minimum Number For Hypothesis Testing](#minimum-number-for-hypothesis-testing)
-    - [Select Data](#select-data-1)
-    - [MCMC Parameters](#mcmc-parameters-1)
-  - [Output](#output-1)
-- [PECA-pS](#peca-ps)
-  - [Description](#description-2)
-  - [Parameters](#parameters-2)
-    - [Working Directory](#working-directory-2)
-    - [About Data](#about-data-1)
-      - [Time Points](#time-points)
-      - [Number of Replicates](#number-of-replicates-1)
-    - [Smoothing](#smoothing-2)
-    - [Select Data](#select-data-2)
-      - [Gene Name Column](#gene-name-column-1)
-      - [Absolute mRNA Concentration Data](#absolute-mrna-concentration-data)
-      - [Data Input Form 1](#data-input-form-1-1)
-      - [PRE/REF SILAC Data](#preref-silac-data)
-      - [Data Input Form 2](#data-input-form-2-1)
-      - [NEW/REF SILAC Data](#newref-silac-data)
-      - [Data Input Form 3](#data-input-form-3)
-    - [MCMC Parameters](#mcmc-parameters-2)
-  - [Output](#output-2)
-- [PECA-R](#peca-r)
-  - [Description](#description-3)
-  - [Parameters](#parameters-3)
-    - [Working Directory](#working-directory-3)
-    - [About the Data](#about-the-data-1)
-    - [Smoothing](#smoothing-3)
-    - [Select Data](#select-data-3)
-      - [Gene Name Column](#gene-name-column-2)
-      - [mRNA Concentration Data](#mrna-concentration-data)
-      - [Data Input Form 1](#data-input-form-1-2)
-      - [Protein Concentration Data](#protein-concentration-data)
-      - [Data Input Form 2](#data-input-form-2-2)
-    - [MCMC Parameters](#mcmc-parameters-3)
-  - [Output](#output-3)
-
-
 # PECAplus Overview
 
 Protein Expression Control Analysis (PECA) is a statistical toolbox to analyze time-series multi-omics dataset where molecules in one -omics platform serve as template for synthesis of the other.  For example, PECA can analyze paired RNA and protein time series data in order to identify change points of the impact translation and protein degradation on changes in protein concentration *given* changing RNA concentrations. 
@@ -97,11 +16,11 @@ The principal method was published [here](http://pubs.acs.org/doi/abs/10.1021/pr
 
 # Requirements
 
-64 bit Windows PC
+64 bit Windows with .NET Framework 4.5 or higher ([See Perseus Requirements](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation))
 
-PERSEUS version 1.6.0.2 or above
+PERSEUS version 1.6.0.2
 
-Installing the plugin: Place 'pluginPECA.dll' file and 'PECAInstallations' folder inside the bin folder where Perseus.exe is located.
+Installing the plugin: Place ‘pluginPECA.dll’ file and ‘PECAInstallations’ folder inside the bin folder where Perseus.exe is located.
 
 # PECA Core
 
