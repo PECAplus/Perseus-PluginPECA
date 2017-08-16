@@ -7,7 +7,7 @@
 	PECA-R uses R_Sample.txt as dataset
 
 ## PECA Core Parameters
-	Working Directory: //select a preferred directory where results should be saved
+	Working Directory: <preferred directory where results should be saved>
 	Number of Replicates: 2
 	[x] Feature Smoothing:
 		Gaussian Kernel Signal Variance: 2.0
@@ -35,7 +35,7 @@
 	MCMC Samples: 1000
 
 ## PECA-N Parameters
-	Working Directory: //select a preferred directory where results should be saved
+	Working Directory: <preferred directory where results should be saved>
 	Number of Replicates: 2
 	[x] Feature Smoothing:
 		Gaussian Kernel Signal Variance: 2.0
@@ -64,7 +64,7 @@
 	MCMC Samples: 1000
 
 ## PECA-pS Parameters
-	Working Directory: //select a preferred directory where results should be saved
+	Working Directory: <preferred directory where results should be saved>
 	Time Points: 0 1 2 4 6 9 12
 	Number of Replicates: 2
 	[x] Feature Smoothing:
@@ -94,12 +94,10 @@
 	MCMC Samples: 1000
 
 ## PECA-R Parameters
-	Working Directory: //select a preferred directory where results should be saved
+	Working Directory: <preferred directory where results should be saved>
 	Time Points: 0 1 2 4 6 9 12
 	Number of Replicates: 2
-	[x] Feature Smoothing:
-		Gaussian Kernel Signal Variance: 2.0
-		Gaussian Kernel Lengthscale: 1.0
+	[ ] Feature Smoothing
 	Gene Name Column: Gene_Group
 	mRNA Concentration Data:
 		R1_LPS_0h
