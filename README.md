@@ -19,7 +19,7 @@ The principal method was published [here](http://pubs.acs.org/doi/abs/10.1021/pr
 
 See the [Wiki](https://github.com/PECAplus/Perseus-PluginPECA/wiki) for full documentation and examples.
 
-## Software and Hardware Requirements
+## Requirements
 
 64 bit Windows with .NET Framework 4.5 or higher (See [Perseus Requirements](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation))
 
@@ -33,7 +33,7 @@ PERSEUS version 1.6.0.2 (See [Perseus Download and Installation Guide](http://ww
 * Copy/Cut `pluginPECA.dll` file and `PECAInstallations` folder from `Perseus-PluginPECA-master\Plugin`
 * Paste into the `bin` folder
 
-## Bugs and Feedback //ask
+## Bugs and Feedback
 
 For bugs, questions and discussions please use the [GitHub Issues](https://github.com/PECAplus/Perseus-PluginPECA/issues).
 
