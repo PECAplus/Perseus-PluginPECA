@@ -2,7 +2,7 @@
 
 Perseus Plugin for PECA.
 
-<img src="https://github.com/PECAplus/Perseus-PluginPECA/wiki/images/PECALogo.png" align="left" width="240" height="180">
+<img src="https://github.com/PECAplus/Perseus-PluginPECA/wiki/images/PECALogo.png" align="left" width="240" height="150">
 
 
 
