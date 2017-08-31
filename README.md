@@ -47,7 +47,7 @@ For bugs, questions and discussions please use the [GitHub Issues](https://githu
 
 ## License
 
-Still needs to be updated ...
+Copyright (C) <2017> Guoshou Teo <gt49@nyu.edu>, Yunbin Zhang <yz2236@nyu.edu>, Christine Vogel <cvogel@nyu.edu>, and Hyungwon Choi <hwchoi@nus.edu.sg>, National University of Singapore.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 
