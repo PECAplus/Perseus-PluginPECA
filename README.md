@@ -21,6 +21,8 @@ See the [Wiki](https://github.com/PECAplus/Perseus-PluginPECA/wiki) for full doc
 
 See [Samples](https://github.com/PECAplus/Perseus-PluginPECA/tree/master/Samples) for sample files and parameters.
 
+See [PECAplus CLI](https://github.com/PECAplus/PECAplus_cmd_line) for Command-Line Interface version.
+
 ## Requirements
 
 64 bit Windows with .NET Framework 4.5 or higher (See [Perseus Requirements](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation))
