@@ -31,7 +31,7 @@
 			... (ordered by time then by replicate)
 			LFQ.intensity.8_30h_RS3
 		Data Input Form 2: ln
-	MCMC Burn-In: 5000
+	MCMC Burn-In: 1000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
 
@@ -60,7 +60,7 @@
 			... (ordered by time then by replicate)
 			LFQ.intensity.8_30h_RS3
 		Data Input Form 2: ln
-	MCMC Burn-In: 5000
+	MCMC Burn-In: 1000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
 
@@ -91,7 +91,7 @@
 		... (ordered by time then by replicate)
 		ML_LPS_R2_12h
 	Data Input Form 3: ln
-	MCMC Burn-In: 5000
+	MCMC Burn-In: 1000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
 
@@ -114,7 +114,7 @@
 		... (ordered by time then by replicate)
 		M/L_LPS_R2_12h
 	Data Input Form 2: raw
-	MCMC Burn-In: 5000
+	MCMC Burn-In: 1000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
 
