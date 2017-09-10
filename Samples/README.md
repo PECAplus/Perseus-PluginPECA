@@ -2,7 +2,7 @@
 
 ## Description
 	PECA Core uses N_Sample.txt as dataset and module.txt as Biological Function Annotation File
-	PECA-N uses N_Sample.txt as dataset and module.txt as Biological Function Annotation File
+	PECA-N uses N_Sample.txt as dataset, module.txt as Biological Function Annotation File and edge.txt as Edge File
 	PECA-pS uses pS_Sample.txt as dataset
 	PECA-R uses R_Sample.txt as dataset
 
@@ -12,24 +12,25 @@
 	[x] Feature Smoothing:
 		Gaussian Kernel Signal Variance: 2.0
 		Gaussian Kernel Lengthscale: 1.0
-	[x] Function Enrichment Analysis:
-		Biological Function Annotation File: //select module.txt
+	[x] Gene Set Analysis:
+		Biological Function Annotation File: <file path of module.txt>
 		Enrichment Analysis FDR Cutoff: 0.05
-		Minimum % of Genes to Consider a Pathway: 0
-		Minimum Number for Hypothesis Testing: 1
+		Minimum % of Genes to Consider a Pathway: 50
+		Minimum Number for Hypothesis Testing: 5
 	Gene Name Column: ENSG
-	Expression Series 1:
-		R1t0
-		R1t0.5
-		... (ordered by time then by replicate)
-		R3t30
-	Data Input Form 1: ln
-	Expression Series 2:
-		LFQ.intensity.1_0h_RS1
-		LFQ.intensity.2_05h_RS1
-		... (ordered by time then by replicate)
-		LFQ.intensity.8_30h_RS3
-	Data Input Form 2: ln
+	[ ] mRNA Level Inference:
+		Expression Series 1:
+			R1t0
+			R1t0.5
+			... (ordered by time then by replicate)
+			R3t30
+		Data Input Form 1: ln
+		Expression Series 2:
+			LFQ.intensity.1_0h_RS1
+			LFQ.intensity.2_05h_RS1
+			... (ordered by time then by replicate)
+			LFQ.intensity.8_30h_RS3
+		Data Input Form 2: ln
 	MCMC Burn-In: 5000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
@@ -40,25 +41,25 @@
 	[x] Feature Smoothing:
 		Gaussian Kernel Signal Variance: 2.0
 		Gaussian Kernel Lengthscale: 1.0
-	Biological Function Annotation File: //select module.txt
-	Minimum Size of Pathways: 0
-	Maximum Size of Pathways: 20
+	Edge File: <file path of edge.txt>
+	Biological Function Annotation File: <file path of module.txt>
 	Enrichment Analysis FDR Cutoff: 0.05
-	Minimum % of Genes to Consider a Pathway: 20
+	Minimum % of Genes to Consider a Pathway: 50
 	Minimum Number for Hypothesis Testing: 5
 	Gene Name Column: ENSG
-	Expression Series 1:
-		R1t0
-		R1t0.5
-		... (ordered by time then by replicate)
-		R3t30
-	Data Input Form 1: ln
-	Expression Series 2:
-		LFQ.intensity.1_0h_RS1
-		LFQ.intensity.2_05h_RS1
-		... (ordered by time then by replicate)
-		LFQ.intensity.8_30h_RS3
-	Data Input Form 2: ln
+	[ ] mRNA Level Inference:
+		Expression Series 1:
+			R1t0
+			R1t0.5
+			... (ordered by time then by replicate)
+			R3t30
+		Data Input Form 1: ln
+		Expression Series 2:
+			LFQ.intensity.1_0h_RS1
+			LFQ.intensity.2_05h_RS1
+			... (ordered by time then by replicate)
+			LFQ.intensity.8_30h_RS3
+		Data Input Form 2: ln
 	MCMC Burn-In: 5000
 	MCMC Thinning: 10
 	MCMC Samples: 1000
@@ -71,6 +72,7 @@
 		Gaussian Kernel Signal Variance: 2.0
 		Gaussian Kernel Lengthscale: 1.0
 	Gene Name Column: Gene_Group
+	[ ] Gene Set Analysis
 	mRNA Concentration Data:
 		R1_LPS_0h
 		R1_LPS_01h
@@ -98,6 +100,7 @@
 	Time Points: 0 1 2 4 6 9 12
 	Number of Replicates: 2
 	[ ] Feature Smoothing
+	[ ] Gene Set Analysis
 	Gene Name Column: Gene_Group
 	mRNA Concentration Data:
 		R1_LPS_0h
