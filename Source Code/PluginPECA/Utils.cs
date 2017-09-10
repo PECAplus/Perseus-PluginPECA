@@ -19,13 +19,11 @@ namespace PluginPECA
 {
     public static class Utils
     {
-        //return the error info if any error is found
-        public static string CheckCommonParameters(IMatrixData mdata, Parameters param, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2")
+
+        public static string CheckNonDataParameters(IMatrixData mdata, Parameters param)
         {
             string workingDirectory = param.GetParam<string>("Working Directory").Value;
             int[] nameInd = new[] { param.GetParam<int>("Gene Name Column").Value };
-            int[] series1Ind = param.GetParam<int[]>(expSeries1).Value;
-            int[] series2Ind = param.GetParam<int[]>(expSeries2).Value;
             int n_rep = param.GetParam<int>("Number of Replicates").Value;
             ParameterWithSubParams<bool> getSmoothing = param.GetParamWithSubParams<bool>("Smoothing");
 
@@ -33,12 +31,6 @@ namespace PluginPECA
             if (!Directory.Exists(workingDirectory))
             {
                 return "Select a valid working directory";
-            }
-
-            //about data checking
-            if ((series1Ind.Length % n_rep) != 0)
-            {
-                return "Number of columns not multiple of Number of Replicates";
             }
 
             //smoothing checking
@@ -55,14 +47,6 @@ namespace PluginPECA
             {
                 return "Select a gene name column";
             }
-            if (series1Ind.Length == 0)
-            {
-                return "Select some columns for Expression Series";
-            }
-            if (series1Ind.Length != series2Ind.Length)
-            {
-                return "Expression Series 1 and 2 should have matching number of columns";
-            }
 
             //MCMC parameters checking
 
@@ -71,19 +55,60 @@ namespace PluginPECA
                 return "MCMC parameters should be positive integers";
             }
 
-            double baseVal1 = GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm1));
-            double baseVal2 = GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm2));
+            return null;
+        }
+
+        //public static string CheckRNAParameters(IMatrixData mdata, Parameters param, Parameters dataParam, string RNAexp)
+        //{
+        //    int[] RNAexpInd = dataParam.GetParam<int[]>(RNAexp).Value;
+        //    int n_rep = param.GetParam<int>("Number of Replicates").Value;
+        //    if ((RNAexpInd.Length % n_rep) != 0)
+        //    {
+        //        return "Number of columns not multiple of Number of Replicates";
+        //    }
+        //    if (RNAexpInd.Length == 0)
+        //    {
+        //        return "Select some columns for RNA Expression Series";
+        //    }
+
+        //    return null;
+        //}
+
+
+        //return the error info if any error is found
+        public static string CheckCommonParameters(IMatrixData mdata, Parameters param, Parameters dataParam, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2", string dataForm1 = "Data Input Form 1", string dataForm2 = "Data Input Form 2")
+        {
+            int[] series1Ind = dataParam.GetParam<int[]>(expSeries1).Value;
+            int[] series2Ind = expSeries2 != null ? dataParam.GetParam<int[]>(expSeries2).Value : new int[0];
+            int n_rep = param.GetParam<int>("Number of Replicates").Value;
+
+            //about data checking
+            if ((series1Ind.Length % n_rep) != 0)
+            {
+                return "Number of columns not multiple of Number of Replicates";
+            }
+            if (series1Ind.Length == 0)
+            {
+                return "Select some columns for Expression Series";
+            }
+            if (expSeries2 != null && series1Ind.Length != series2Ind.Length)
+            {
+                return "Expression Series 1 and 2 should have matching number of columns";
+            }
+
+            double baseVal1 = GetBase(dataParam.GetParamWithSubParams<int>(dataForm1));
+            double baseVal2 = dataForm2 != null ? GetBase(dataParam.GetParamWithSubParams<int>(dataForm2)) : int.MaxValue;
             //check data form
             if (baseVal1<0 && baseVal1 != -1)
             {
-                return PECAParameters.dataForm1 + " should have a positive base";
+                return dataForm1 + " should have a positive base";
             }
-            if (baseVal2 < 0 && baseVal2 != -1)
+            if (dataForm2 != null && baseVal2 < 0 && baseVal2 != -1)
             {
-                return PECAParameters.dataForm2 + " should have a positive base";
+                return dataForm2 + " should have a positive base";
             }
 
-            return null;
+            return CheckNonDataParameters(mdata,param);
         }
 
         //the common part to both Core and N in case enrichment is used
@@ -110,11 +135,11 @@ namespace PluginPECA
         }
 
 
-        public static string CheckCoreParameters(IMatrixData mdata, Parameters param, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2")
+        public static string CheckCoreParameters(IMatrixData mdata, Parameters param, Parameters dataParam, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2", string dataForm1 = "Data Input Form 1", string dataForm2 = "Data Input Form 2")
         {
-            string commonErr = CheckCommonParameters(mdata, param, expSeries1, expSeries2);
+            string commonErr = CheckCommonParameters(mdata, param, dataParam, expSeries1, expSeries2, dataForm1, dataForm2);
             if (commonErr != null) return commonErr;
-            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsea);
+            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsa);
             if (getAnalysis.Value)
             {
                 return CheckEnrichmentCommon(getAnalysis.GetSubParameters());
@@ -154,7 +179,7 @@ namespace PluginPECA
 
         //this function is modified from PerseusPluginLib/Load/UnstructuredTxtUpload.cs LoadSplit function
         //obtains the output from fdr.exe (so only applicable to PECA CORE and N)
-        public static void GetOutput(IMatrixData mdata, Parameters param, string filename, string geneName, string expSeries1 = "Expression Series 1", int numOfSeries = 2)
+        public static void GetOutput(IMatrixData mdata, Parameters param, Parameters dataParam, string filename, string geneName, string expSeries1 = "Expression Series 1", int numOfSeries = 2)
         {
             char separator = '\t';
 
@@ -184,7 +209,7 @@ namespace PluginPECA
                 new List<string>(), new List<string>(), new List<double[][]>());
 
             //be careful with changes of Number of time points in the future
-            int numOfExpCols = numOfSeries * param.GetParam<int[]>(expSeries1).Value.Length;
+            int numOfExpCols = numOfSeries * dataParam.GetParam<int[]>(expSeries1).Value.Length;
 
             //file format is structured so that expressions columns are before numeric ones
             //so convert the numeric ones before expression columns
@@ -200,23 +225,34 @@ namespace PluginPECA
         }
 
         //returns the CORE input parameter lines
-        public static string[] GetInputParamLines(Parameters param)
+        public static string[] GetInputParamLines(Parameters param, Parameters dataParam, bool isRNAOnly = false)
         {
-            string tp = string.Join(" ", Enumerable.Range(0, param.GetParam<int[]>("Expression Series 1").Value.Length / param.GetParam<int>("Number of Replicates").Value));
+            int seriesLen = isRNAOnly ? dataParam.GetParam<int[]>(PECAParameters.RNAexp).Value.Length : dataParam.GetParam<int[]>(PECAParameters.series1).Value.Length;
 
+            string tp = string.Join(" ", Enumerable.Range(0, seriesLen / param.GetParam<int>("Number of Replicates").Value));
 
-            //isLN check
-            //if yes then false - does not need to be logged
-            //if not true - needs to be logged
-            string needLoggedString1 = PluginPECA.Utils.GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm1)) == 0 ? "0" : "1";
-            string needLoggedString2 = PluginPECA.Utils.GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm2)) == 0 ? "0" : "1";
-            //string isLoggedString = param.GetParam<bool>("Is log2(x)?").Value ? "false" : "true";
+            string lineX, lineY;
 
+            if (isRNAOnly)
+            {
+                string needLoggedString = PluginPECA.Utils.GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataFormGeneric)) == 0 ? "0" : "1";
+                lineX = "FILE_X = ";
+                lineY = "FILE_Y = fileY.txt " + needLoggedString;
+            } else {
+                //isLN check
+                //if yes then false - does not need to be logged
+                //if not true - needs to be logged
+                string needLoggedString1 = PluginPECA.Utils.GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataForm1)) == 0 ? "0" : "1";
+                string needLoggedString2 = PluginPECA.Utils.GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataForm2)) == 0 ? "0" : "1";
+                //string isLoggedString = param.GetParam<bool>("Is log2(x)?").Value ? "false" : "true";
+                lineX = "FILE_X = fileX.txt " + needLoggedString1;
+                lineY = "FILE_Y = fileY.txt " + needLoggedString2;
+            }
 
             string[] lines =
             {
-                "FILE_X = fileX.txt " +needLoggedString1,
-                "FILE_Y = fileY.txt "+needLoggedString2,
+                lineX,
+                lineY,
                 string.Format("N_REP = {0}", param.GetParam<int>("Number of Replicates").Value),
                 "TIME = " + tp,
                 string.Format("N_BURN = {0}", param.GetParam<int>("MCMC Burn-In").Value),
@@ -225,8 +261,6 @@ namespace PluginPECA
                 //string.Format("N_BURN = {0}", getMCMCParam(param.GetParamWithSubParams<int>("MCMC Burn-In"), 0)),
                 //string.Format("N_THIN = {0}", getMCMCParam(param.GetParamWithSubParams<int>("MCMC Thinning"), 1)),
                 //string.Format("N_SAMPLE = {0}", getMCMCParam(param.GetParamWithSubParams<int>("MCMC Samples"), 2)),
-                "PROTEIN_VARIANCE = adaptive",
-                "EXPERIMENTAL_DESIGN=nonreplicate",
                 ""
             };
             //success if 0
@@ -243,10 +277,10 @@ namespace PluginPECA
         }
 
         //input is the paratemer file
-        public static int WriteInputParam(Parameters param, string workingDir)
+        public static int WriteInputParam(Parameters param, Parameters dataParam, string workingDir, bool isRNAOnly = false)
         {
 
-            string[] lines = GetInputParamLines(param);
+            string[] lines = GetInputParamLines(param, dataParam, isRNAOnly);
 
             string inputLocation = System.IO.Path.Combine(workingDir, "input");
             System.IO.File.WriteAllLines(inputLocation, lines);
@@ -254,40 +288,163 @@ namespace PluginPECA
         }
 
         //CPS, i.e. gene enrichment analysis, parameters
-        public static string[] GetCPSInputParamLines(Parameters param)
+        public static string[] GetGSAInputParamLines(Parameters param, int option)
         {
-            //need to update this
+
+            //empty last line for PS,R or N
+            string lastLine = "";
+
+            switch(option)
+            {
+                //PECA_CORE
+                case -1:
+                    break;
+                //PECA_N
+                case -2:
+                    //don't need this part since the program already checks
+                    //lastLine = "MODULE=Adjacency_list.txt";
+                    break;
+                //SYNTHESIS = 1, DEGRADATION = 0
+                case 0:
+                    //degradation
+                    lastLine = "SYNTHESIS=0";
+                    break;
+                case 1:
+                    //synthesis
+                    lastLine = "SYNTHESIS=1";
+                    break;
+                default:
+                    return null;
+            }
 
             string[] lines =
             {
                 //get FDR here
                 string.Format("FDR_cutoff={0}", param.GetParam<Double>(PECAParameters.fdrCutoff).Value),
-                "CPS_table=data_R_CPS.txt",
                 "GO_term_table=networkFile.txt",
                 //minimum percentage 
-                string.Format("BACKGROUND = {0} {1}", param.GetParam<int>(PECAParameters.backgroundPar1).Value, param.GetParam<int>(PECAParameters.backgroundPar2).Value)
+                string.Format("BACKGROUND = {0} {1}", param.GetParam<int>(PECAParameters.backgroundPar1).Value, param.GetParam<int>(PECAParameters.backgroundPar2).Value),
+                lastLine
             };
-
             
-
             return lines;
 
 
         }
 
-        
-        public static int WriteCPSInputParam(Parameters param, string workingDir)
+        public static int WriteGSAInputParam(Parameters param, int option, string workingDir)
         {
-            string[] lines = GetCPSInputParamLines(param);
-            string inputLocation = System.IO.Path.Combine(workingDir, "cps_input");
+            string[] lines = GetGSAInputParamLines(param, option);
+            if (lines == null) return -1;
+            string inputLocation = System.IO.Path.Combine(workingDir, "gsa_input");
             System.IO.File.WriteAllLines(inputLocation, lines);
             return 0;
         }
 
+        public static IMatrixData getGSA(Parameters param, IMatrixData mdata, string workingDirectory, int option, ProcessInfo processInfo, out string errorString)
+        {
+            string folderDir = null;
+            if (option == 0)
+            {
+                folderDir = "degradationGSA";
+            } else if (option == 1)
+            {
+                folderDir = "synthesisGSA";
+            }
+            errorString = null;
+            string modulePath = param.GetParam<string>(PECAParameters.networkFile).Value;
+            string newWorkingDir = folderDir == null ? workingDirectory : Path.Combine(workingDirectory, @folderDir);
+            string moduleDestination = Path.Combine(newWorkingDir, "networkFile.txt");
+            //string moduleDestination = Path.Combine(@workingDirectory, "networkFile.txt");
+
+            Directory.CreateDirectory(newWorkingDir);
+            File.Copy(modulePath, moduleDestination, true);
+
+            //copy output
+            if (option == 0 || option == 1)
+            {
+                string oldCPSoutputLoc = Path.Combine(workingDirectory, @"data_R_CPS.txt");
+                string newCPSOutputLoc = Path.Combine(newWorkingDir, @"data_R_CPS.txt");
+                File.Copy(oldCPSoutputLoc, newCPSOutputLoc, true);
+            }
+
+
+            string convertErr = ConvertUnix2Dos(moduleDestination, processInfo);
+            if (convertErr != null)
+            {
+                errorString = convertErr;
+                return mdata;
+            }
+            //insert option here
+            if (WriteGSAInputParam(param, option, newWorkingDir) != 0)
+            {
+                errorString = "Unable To Process GSA Parameters";
+                return mdata;
+            }
+            string exeCPS = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\gsa.exe");
+            string inputCPSLocation = "\"" + System.IO.Path.Combine(@newWorkingDir, @".\gsa_input") + "\"";
+            if (ExternalProcess.RunExe(exeCPS, inputCPSLocation, newWorkingDir, processInfo.Status, processInfo.Progress, -1, -1, out string processInfoErrString4) != 0)
+            {
+                errorString = processInfoErrString4;
+                return mdata;
+            }
+            //processInfo.ErrString = processInfoErrString5;
+            //supplTables = new IMatrixData[] { PluginPECA.Utils.GetGOEnr(mdata, workingDirectory) };
+            return GetGOEnr(mdata, @newWorkingDir, option);
+        }
         
+        public static int WriteInputFilesCond(IMatrixData mdata, Parameters param, Parameters dataParam, bool isRNAOnly, string workingDirectory, out string errString, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2")
+        {
+            if (isRNAOnly)
+            {
+                //new writeinput here
+                return WriteRNAFiles(mdata, param, dataParam, workingDirectory, out errString, PluginPECA.PECAParameters.RNAexp);
+            }
+            else
+            {
+                return WriteInputFiles(mdata, param, dataParam, workingDirectory, out errString);
+            }
+        }
+
+        public static int WriteRNAFiles(IMatrixData mdata, Parameters param, Parameters dataParam, string workingDirectory, out string errString, string RNAexp)
+        {
+            //need to write a general version
+            //accepts text only data for now
+
+            string fileTempY = System.IO.Path.Combine(workingDirectory, @".\tempY.txt");
+            string fileY = System.IO.Path.Combine(workingDirectory, @".\fileY.txt");
 
 
-        public static int WriteInputFiles(IMatrixData mdata, Parameters param, string workingDirectory, out string errString, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2")
+            IMatrixData mCopyY = (IMatrixData)mdata.Clone();
+
+            int[] nameInd = new[] { param.GetParam<int>("Gene Name Column").Value };
+
+            int[] yInd = dataParam.GetParam<int[]>(RNAexp).Value;
+
+            double baseVal = GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataFormGeneric));
+
+            SetupMDataForInput(mCopyY, yInd, nameInd, baseVal);
+
+            try
+            {
+                //hacky way of removing comments
+                PerseusUtils.WriteMatrixToFile(mCopyY, fileTempY, false);
+                RemoveCommentsFromFile(fileTempY, fileY);
+
+            }
+            catch (Exception e)
+            {
+                //need to reorganize this
+                errString = e.ToString();
+                return -1;
+            }
+
+            errString = null;
+            return 0;
+        }
+
+
+        public static int WriteInputFiles(IMatrixData mdata, Parameters param, Parameters dataParam, string workingDirectory, out string errString, string expSeries1 = "Expression Series 1", string expSeries2 = "Expression Series 2")
         {
             //need to write a general version
             //accepts text only data for now
@@ -307,11 +464,11 @@ namespace PluginPECA
 
             int[] nameInd = new[] { param.GetParam<int>("Gene Name Column").Value } ;
 
-            int[] xInd = param.GetParam<int[]>(expSeries1).Value;
-            int[] yInd = param.GetParam<int[]>(expSeries2).Value;
+            int[] xInd = dataParam.GetParam<int[]>(expSeries1).Value;
+            int[] yInd = dataParam.GetParam<int[]>(expSeries2).Value;
 
-            double baseVal1 = PluginPECA.Utils.GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm1));
-            double baseVal2 = PluginPECA.Utils.GetBase(param.GetParamWithSubParams<int>(PECAParameters.dataForm2));
+            double baseVal1 = GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataForm1));
+            double baseVal2 = GetBase(dataParam.GetParamWithSubParams<int>(PECAParameters.dataForm2));
 
             SetupMDataForInput(mCopyX, xInd, nameInd, baseVal1);
             SetupMDataForInput(mCopyY, yInd, nameInd, baseVal2);
@@ -319,7 +476,6 @@ namespace PluginPECA
             try
             {
                 //hacky way of removing comments
-                //better to just ask GS to ignore comments from his code
                 PerseusUtils.WriteMatrixToFile(mCopyX, fileTempX, false);
                 RemoveCommentsFromFile(fileTempX, fileX);
                 PerseusUtils.WriteMatrixToFile(mCopyY, fileTempY, false);
@@ -338,16 +494,31 @@ namespace PluginPECA
         }
 
         //gene enrichment analysis for both Basic PECA and PECA-N
-        public static IMatrixData GetGOEnr(IMatrixData mdata, string workingDir)//, out string errString)
+        public static IMatrixData GetGOEnr(IMatrixData mdata, string workingDir, int option)//, out string errString)
         {
             char separator = '\t';
 
             string filename = Path.Combine(workingDir, @".\Goterms.txt");
 
             IMatrixData mNew = (IMatrixData)mdata.CreateNewInstance();
+
+            string name = "GSA";
+
+            if (option == 0)
+            {
+                name = name + "_Degradation";
+            } else if (option == 1)
+            {
+                name = name + "_Synthesis";
+            }
+
             mNew.Clear();
-            mNew.Name = "Gene Set Enrichment Analysis";
-            mNew.AltName = "Gene Set Enrichment Analysis";
+            mNew.Name = name;
+            mNew.AltName = name;
+
+            //update
+            //mNew.AltName = "Gene Set Enrichment Analysis";
+            //mNew.Description = "Gene Set Enrichment Analysis";
 
 
             string[] colNames = TabSep.GetColumnNames(filename, 0, PerseusUtils.commentPrefix,

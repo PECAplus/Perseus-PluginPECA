@@ -36,7 +36,7 @@ namespace PluginPECA.ModulePS
         {
 
             string[] expSeriesNames = new string[] { PECAParameters.pecaPSSeries1, PECAParameters.pecaPSSeries2, PECAParameters.pecaPSSeries3 };
-            string[] expSeriesHelp = new string[] { "Absolute mRNA Concentration Data", "the channel representing degradation of pre-existing proteins", "the channel representing synthesis of new proteins" };
+            string[] expSeriesHelp = new string[] { "mRNA Data", "the channel representing degradation of pre-existing proteins", "the channel representing synthesis of new proteins" };
 
 
             Parameters parameters = new Parameters
@@ -47,6 +47,8 @@ namespace PluginPECA.ModulePS
             parameters.AddParameterGroup(PECAParameters.GetAboutDataWithTP(), "About Data", false);
 
             parameters.AddParameterGroup(PECAParameters.GetFeatures(), "Features", false);
+
+            parameters.AddParameterGroup(PECAParameters.GetConditionalModule(), "Gene Set Analysis", false);
 
             parameters.AddParameterGroup(PECAParameters.SelectMultipleData(mdata, expSeriesNames, expSeriesHelp), "Select Data", true);
 
@@ -63,7 +65,7 @@ namespace PluginPECA.ModulePS
 
             string geneNameColumn = mdata.StringColumnNames[param.GetParam<int>("Gene Name Column").Value];
 
-            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca2.exe");
+            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca_r_ps.exe");
 
             string workingDirectory = param.GetParam<string>("Working Directory").Value;
 
@@ -72,10 +74,6 @@ namespace PluginPECA.ModulePS
             string outputFile = System.IO.Path.Combine(workingDirectory, @".\data_R_CPS.txt");
 
             string errString;
-
-
-            //processInfo.ErrString = workingDirectory;
-            //return;
 
             if (Utils.WriteInputFiles(mdata, param, workingDirectory, out errString, PECAParameters.pecaPSSeries1, PECAParameters.pecaPSSeries2, PECAParameters.pecaPSSeries3) != 0)
             {
@@ -109,8 +107,27 @@ namespace PluginPECA.ModulePS
                 return;
             }
 
-            PluginPECA.Utils.GetOutput(mdata, param, outputFile, geneNameColumn, PECAParameters.pecaPSSeries1, 3);
+            PluginPECA.Utils.GetOutput(mdata, param, param, outputFile, geneNameColumn, PECAParameters.pecaPSSeries1, 3);
 
+            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsa);
+
+            if (getAnalysis.Value)
+            {
+                IMatrixData supplDataSynth = PluginPECA.Utils.getGSA(getAnalysis.GetSubParameters(), mdata, workingDirectory, 1, processInfo, out string gsaErrString);
+                if (gsaErrString != null)
+                {
+                    processInfo.ErrString = gsaErrString;
+                    return;
+                }
+
+                IMatrixData supplDataDeg = PluginPECA.Utils.getGSA(getAnalysis.GetSubParameters(), mdata, workingDirectory, 0, processInfo, out string gsaErrString2);
+                if (gsaErrString2 != null)
+                {
+                    processInfo.ErrString = gsaErrString2;
+                    return;
+                }
+                supplTables = new IMatrixData[] { supplDataSynth, supplDataDeg };
+            }
 
             processInfo.Progress(0);
 

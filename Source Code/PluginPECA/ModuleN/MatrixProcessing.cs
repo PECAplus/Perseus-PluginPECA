@@ -47,7 +47,7 @@ namespace PluginPECA.ModuleN
 
             parameters.AddParameterGroup(PECAParameters.GetModule(), PECAParameters.network + " Info", false);
 
-            parameters.AddParameterGroup(PECAParameters.SelectData(mdata), "Select Data", true);
+            parameters.AddParameterGroup(PECAParameters.SelectConditionalData(mdata), "Select Data", true);
 
             parameters.AddParameterGroup(PECAParameters.GetMCMCParams(), "MCMC Parameters", false);
 
@@ -62,7 +62,7 @@ namespace PluginPECA.ModuleN
 
             string geneNameColumn = mdata.StringColumnNames[param.GetParam<int>("Gene Name Column").Value];
 
-            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca.exe");
+            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca_core_N.exe");
 
             string workingDirectory = param.GetParam<string>("Working Directory").Value;
 
@@ -72,29 +72,39 @@ namespace PluginPECA.ModuleN
 
             string errString;
 
-            string paramInfo = Utils.CheckParameters(mdata, param);
+            ParameterWithSubParams<bool> getRNAInf = param.GetParamWithSubParams<bool>(PECAParameters.RNAInference);
 
+            string paramInfo = null;
+
+            if (getRNAInf.Value)
+            {
+                //RNAinf checking
+                paramInfo = Utils.CheckParameters(mdata, param, getRNAInf.GetSubParameters(), PECAParameters.RNAexp, null, PECAParameters.dataFormGeneric, null);
+            }
+            else
+            {
+                paramInfo = Utils.CheckParameters(mdata, param, getRNAInf.GetSubParameters());
+            }
             if (paramInfo != null)
             {
                 processInfo.ErrString = paramInfo;
                 return;
             }
 
-            if (Utils.WriteInputFiles(mdata, param, workingDirectory, processInfo, out errString) != 0)
+            if (Utils.WriteInputFiles(mdata, param, getRNAInf.GetSubParameters(), getRNAInf.Value, workingDirectory, processInfo, out errString) != 0)
             {
                 processInfo.ErrString = errString;
                 return;
             }
 
 
-            if (Utils.WriteInputParam(param, workingDirectory) != 0)
+            if (Utils.WriteInputParam(param, getRNAInf.GetSubParameters(), getRNAInf.Value, workingDirectory) != 0)
             {
                 processInfo.ErrString = "Unable To Process the Given Parameters";
                 return;
             }
 
             string inputLocation = "\"" + System.IO.Path.Combine(@workingDirectory, @".\input") + "\"";
-
 
             //0 is PECA task
             //int totPECA = Utils.getMCMCParam(param.GetParamWithSubParams<int>("MCMC Burn-In"), 0) + Utils.getMCMCParam(param.GetParamWithSubParams<int>("MCMC Thinning"), 1) * Utils.getMCMCParam(param.GetParamWithSubParams<int>("MCMC Samples"), 2);
@@ -113,24 +123,40 @@ namespace PluginPECA.ModuleN
                 return;
             }
 
-            PluginPECA.Utils.GetOutput(mdata, param, outputFile, geneNameColumn);
-
-            ////need to include the CPS part
-
-            if (Utils.WriteCPSInputParam(param, workingDirectory) != 0)
+            if (getRNAInf.Value)
             {
-                processInfo.ErrString = "Unable To Process the Enrichment Analysis Parameters";
+                PluginPECA.Utils.GetOutput(mdata, param, getRNAInf.GetSubParameters(), outputFile, geneNameColumn, PECAParameters.RNAexp, 2);
+            }
+            else
+            {
+                PluginPECA.Utils.GetOutput(mdata, param, getRNAInf.GetSubParameters(), outputFile, geneNameColumn);
+            }
+
+            ////need to include the GSA part
+
+            //new version no longer need this
+            //if (Utils.WriteCPSInputParam(param, workingDirectory) != 0)
+            //{
+            //    processInfo.ErrString = "Unable To Process the Enrichment Analysis Parameters";
+            //    return;
+            //}
+            //string exeCPS = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\cps.exe");
+            //string inputCPSLocation = "\"" + System.IO.Path.Combine(@workingDirectory, @".\cps_input") + "\"";
+            //if (ExternalProcess.RunExe(exeCPS, inputCPSLocation, workingDirectory, processInfo.Status, processInfo.Progress, -1, -1, out string processInfoErrString4) != 0)
+            //{
+            //    processInfo.ErrString = processInfoErrString4;
+            //    return;
+            //}
+
+            IMatrixData supplData = PluginPECA.Utils.getGSA(param, mdata, workingDirectory, -2, processInfo, out string gsaErrString);
+            if (gsaErrString != null)
+            {
+                processInfo.ErrString = gsaErrString;
                 return;
             }
-            string exeCPS = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\cps.exe");
-            string inputCPSLocation = "\"" + System.IO.Path.Combine(@workingDirectory, @".\cps_input") + "\"";
-            if (ExternalProcess.RunExe(exeCPS, inputCPSLocation, workingDirectory, processInfo.Status, processInfo.Progress, -1, -1, out string processInfoErrString4) != 0)
-            {
-                processInfo.ErrString = processInfoErrString4;
-                return;
-            }
+
             //processInfo.ErrString = processInfoErrString5;
-            supplTables = new IMatrixData[] { PluginPECA.Utils.GetGOEnr(mdata, workingDirectory) };
+            supplTables = new IMatrixData[] { supplData };
             
             processInfo.Progress(0);
 

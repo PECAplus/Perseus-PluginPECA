@@ -22,7 +22,7 @@ namespace PluginPECA.ModulePS
             string expSeries1 = PECAParameters.pecaPSSeries1;
             string expSeries2 = PECAParameters.pecaPSSeries2;
             string expSeries3 = PECAParameters.pecaPSSeries3;
-            string commonErr = PluginPECA.Utils.CheckCommonParameters(mdata, param, expSeries1, expSeries2);
+            string commonErr = PluginPECA.Utils.CheckCommonParameters(mdata, param, param, expSeries1, expSeries2);
             if (commonErr != null) return commonErr;
 
             string thirdSeriesErr = checkThirdSeries(param, expSeries1, expSeries3);

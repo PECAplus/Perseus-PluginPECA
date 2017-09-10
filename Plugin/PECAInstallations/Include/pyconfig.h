@@ -74,13 +74,11 @@ WIN32 is still required for the locale module.
 #define DONT_HAVE_SIG_PAUSE
 #define LONG_BIT	32
 #define WORD_BIT 32
-#define PREFIX ""
-#define EXEC_PREFIX ""
 
 #define MS_WIN32 /* only support win32 and greater. */
 #define MS_WINDOWS
 #ifndef PYTHONPATH
-#	define PYTHONPATH ".\\DLLs;.\\lib;.\\lib\\plat-win;.\\lib\\lib-tk"
+#	define PYTHONPATH L".\\DLLs;.\\lib"
 #endif
 #define NT_THREADS
 #define WITH_THREAD
@@ -147,32 +145,24 @@ WIN32 is still required for the locale module.
 #if defined(_M_IA64)
 #define COMPILER _Py_PASTE_VERSION("64 bit (Itanium)")
 #define MS_WINI64
+#define PYD_PLATFORM_TAG "win_ia64"
 #elif defined(_M_X64) || defined(_M_AMD64)
-#ifdef __INTEL_COMPILER
+#if defined(__INTEL_COMPILER)
 #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 64 bit (amd64) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
 #else
 #define COMPILER _Py_PASTE_VERSION("64 bit (AMD64)")
 #endif /* __INTEL_COMPILER */
 #define MS_WINX64
+#define PYD_PLATFORM_TAG "win_amd64"
 #else
 #define COMPILER _Py_PASTE_VERSION("64 bit (Unknown)")
 #endif
 #endif /* MS_WIN64 */
 
 /* set the version macros for the windows headers */
-#ifdef MS_WINX64
-/* 64 bit only runs on XP or greater */
-#define Py_WINVER _WIN32_WINNT_WINXP
-#define Py_NTDDI NTDDI_WINXP
-#else
-/* Python 2.6+ requires Windows 2000 or greater */
-#ifdef _WIN32_WINNT_WIN2K
-#define Py_WINVER _WIN32_WINNT_WIN2K
-#else
-#define Py_WINVER 0x0500
-#endif
-#define Py_NTDDI NTDDI_WIN2KSP4
-#endif
+/* Python 3.5+ requires Windows Vista or greater */
+#define Py_WINVER 0x0600 /* _WIN32_WINNT_VISTA */
+#define Py_NTDDI NTDDI_VISTA
 
 /* We only set these values when building Python - we don't want to force
    these values on extensions, as that will affect the prototypes and
@@ -207,12 +197,16 @@ typedef _W64 int ssize_t;
 #define HAVE_SSIZE_T 1
 
 #if defined(MS_WIN32) && !defined(MS_WIN64)
-#ifdef _M_IX86
-#ifdef __INTEL_COMPILER
+#if defined(_M_IX86)
+#if defined(__INTEL_COMPILER)
 #define COMPILER ("[ICC v." _Py_STRINGIZE(__INTEL_COMPILER) " 32 bit (Intel) with MSC v." _Py_STRINGIZE(_MSC_VER) " CRT]")
 #else
 #define COMPILER _Py_PASTE_VERSION("32 bit (Intel)")
 #endif /* __INTEL_COMPILER */
+#define PYD_PLATFORM_TAG "win32"
+#elif defined(_M_ARM)
+#define COMPILER _Py_PASTE_VERSION("32 bit (ARM)")
+#define PYD_PLATFORM_TAG "win_arm"
 #else
 #define COMPILER _Py_PASTE_VERSION("32 bit (Unknown)")
 #endif
@@ -231,42 +225,25 @@ typedef int pid_t;
 #define hypot _hypot
 #endif
 
-#endif /* _MSC_VER */
+/* VS 2015 defines these names with a leading underscore */
+#if _MSC_VER >= 1900
+#define timezone _timezone
+#define daylight _daylight
+#define tzname _tzname
+#endif
+
+/* Side by Side assemblies supported in VS 2005 and VS 2008 but not 2010*/
+#if _MSC_VER >= 1400 && _MSC_VER < 1600
+#define HAVE_SXS 1
+#endif
 
 /* define some ANSI types that are not defined in earlier Win headers */
-#if defined(_MSC_VER) && _MSC_VER >= 1200
+#if _MSC_VER >= 1200
 /* This file only exists in VC 6.0 or higher */
 #include <basetsd.h>
 #endif
 
-/* ------------------------------------------------------------------------*/
-/* The Borland compiler defines __BORLANDC__ */
-/* XXX These defines are likely incomplete, but should be easy to fix. */
-#ifdef __BORLANDC__
-#define COMPILER "[Borland]"
-
-#ifdef _WIN32
-/* tested with BCC 5.5 (__BORLANDC__ >= 0x0550)
- */
-
-typedef int pid_t;
-/* BCC55 seems to understand __declspec(dllimport), it is used in its
-   own header files (winnt.h, ...) - so we can do nothing and get the default*/
-
-#undef HAVE_SYS_UTIME_H
-#define HAVE_UTIME_H
-#define HAVE_DIRENT_H
-
-/* rename a few functions for the Borland compiler */
-#include <io.h>
-#define _chsize chsize
-#define _setmode setmode
-
-#else /* !_WIN32 */
-#error "Only Win32 and later are supported"
-#endif /* !_WIN32 */
-
-#endif /* BORLANDC */
+#endif /* _MSC_VER */
 
 /* ------------------------------------------------------------------------*/
 /* egcs/gnu-win32 defines __GNUC__ and _WIN32 */
@@ -334,10 +311,12 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 			/* So MSVC users need not specify the .lib file in
 			their Makefile (other compilers are generally
 			taken care of by distutils.) */
-#			ifdef _DEBUG
-#				pragma comment(lib,"python27_d.lib")
+#			if defined(_DEBUG)
+#				pragma comment(lib,"python35_d.lib")
+#			elif defined(Py_LIMITED_API)
+#				pragma comment(lib,"python3.lib")
 #			else
-#				pragma comment(lib,"python27.lib")
+#				pragma comment(lib,"python35.lib")
 #			endif /* _DEBUG */
 #		endif /* _MSC_VER */
 #	endif /* Py_BUILD_CORE */
@@ -401,13 +380,13 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 #else
 /* VC6, VS 2002 and eVC4 don't support the C99 LL suffix for 64-bit integer literals */
 #define Py_LL(x) x##I64
-#endif  /* _MSC_VER > 1200  */
+#endif  /* _MSC_VER > 1300  */
 #endif  /* _MSC_VER */
 
 #endif
 
 /* define signed and unsigned exact-width 32-bit and 64-bit types, used in the
-   implementation of Python long integers. */
+   implementation of Python integers. */
 #ifndef PY_UINT32_T
 #if SIZEOF_INT == 4
 #define HAVE_UINT32_T 1
@@ -569,13 +548,6 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 /* Define if you want to use the GNU readline library */
 /* #define WITH_READLINE 1 */
 
-/* Define if you want to have a Unicode type. */
-#define Py_USING_UNICODE
-
-/* Define as the size of the unicode type. */
-/* This is enough for unicodeobject.h to do the "right thing" on Windows. */
-#define Py_UNICODE_SIZE 2
-
 /* Use Python's own small-block memory-allocator. */
 #define WITH_PYMALLOC 1
 
@@ -655,9 +627,19 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 /* Define if you have waitpid.  */
 /* #undef HAVE_WAITPID */
 
+/* Define to 1 if you have the `wcsftime' function. */
+#if defined(_MSC_VER) && _MSC_VER >= 1310
+#define HAVE_WCSFTIME 1
+#endif
+
 /* Define to 1 if you have the `wcscoll' function. */
 #ifndef MS_WINCE
 #define HAVE_WCSCOLL 1
+#endif
+
+/* Define to 1 if you have the `wcsxfrm' function. */
+#ifndef MS_WINCE
+#define HAVE_WCSXFRM 1
 #endif
 
 /* Define if the zlib library has inflateCopy */
@@ -726,9 +708,6 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 /* Define if you have the <sys/utsname.h> header file.  */
 /* #define HAVE_SYS_UTSNAME_H 1 */
 
-/* Define if you have the <thread.h> header file.  */
-/* #undef HAVE_THREAD_H */
-
 /* Define if you have the <unistd.h> header file.  */
 /* #define HAVE_UNISTD_H 1 */
 
@@ -737,6 +716,12 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 
 /* Define if the compiler provides a wchar.h header file. */
 #define HAVE_WCHAR_H 1
+
+/* The size of `wchar_t', as computed by sizeof. */
+#define SIZEOF_WCHAR_T 2
+
+/* The size of `pid_t', as computed by sizeof. */
+#define SIZEOF_PID_T SIZEOF_INT
 
 /* Define if you have the dl library (-ldl).  */
 /* #undef HAVE_LIBDL */

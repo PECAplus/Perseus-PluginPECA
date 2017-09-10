@@ -35,7 +35,7 @@ namespace PluginPECA.ModuleR
         public override Parameters GetParameters(IMatrixData mdata, ref string errString)
         {
             string[] expSeriesNames = new string[] { PECAParameters.pecaRSeries1, PECAParameters.pecaRSeries2 };
-            string[] expSeriesHelp = new string[] { "mRNA data", "M/L data from SILAC", "H/L data from SILAC" };
+            string[] expSeriesHelp = new string[] { "mRNA Data", "'artificial' protein expressions" };
 
             Parameters parameters = new Parameters
                 (
@@ -45,6 +45,8 @@ namespace PluginPECA.ModuleR
             parameters.AddParameterGroup(PECAParameters.GetAboutDataWithTP(), "About Data", false);
 
             parameters.AddParameterGroup(PECAParameters.GetFeatures(), "Features", false);
+
+            parameters.AddParameterGroup(PECAParameters.GetConditionalModule(), "Gene Set Analysis", false);
 
             parameters.AddParameterGroup(PECAParameters.SelectMultipleData(mdata, expSeriesNames, expSeriesHelp), "Select Data", true);
 
@@ -61,7 +63,7 @@ namespace PluginPECA.ModuleR
 
             string geneNameColumn = mdata.StringColumnNames[param.GetParam<int>("Gene Name Column").Value];
 
-            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca2.exe");
+            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca_r_ps.exe");
 
             string workingDirectory = param.GetParam<string>("Working Directory").Value;
 
@@ -82,7 +84,7 @@ namespace PluginPECA.ModuleR
             //need extra checking here like timepoints
             //maybe remove checking from writeInputFiles in the future
             //create an independent one to check
-            if (PluginPECA.Utils.WriteInputFiles(mdata, param, workingDirectory, out errString, PECAParameters.pecaRSeries1, PECAParameters.pecaRSeries2) != 0)
+            if (PluginPECA.Utils.WriteInputFiles(mdata, param, param, workingDirectory, out errString, PECAParameters.pecaRSeries1, PECAParameters.pecaRSeries2) != 0)
             {
                 processInfo.ErrString = errString;
                 return;
@@ -115,8 +117,27 @@ namespace PluginPECA.ModuleR
                 return;
             }
 
-            PluginPECA.Utils.GetOutput(mdata, param, outputFile, geneNameColumn, PECAParameters.pecaRSeries1);
+            PluginPECA.Utils.GetOutput(mdata, param, param, outputFile, geneNameColumn, PECAParameters.pecaRSeries1);
 
+            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsa);
+
+            if (getAnalysis.Value)
+            {
+                IMatrixData supplDataSynth = PluginPECA.Utils.getGSA(getAnalysis.GetSubParameters(), mdata, workingDirectory, 1, processInfo, out string gsaErrString);
+                if (gsaErrString != null)
+                {
+                    processInfo.ErrString = gsaErrString;
+                    return;
+                }
+
+                IMatrixData supplDataDeg = PluginPECA.Utils.getGSA(getAnalysis.GetSubParameters(), mdata, workingDirectory, 0, processInfo, out string gsaErrString2);
+                if (gsaErrString2 != null)
+                {
+                    processInfo.ErrString = gsaErrString2;
+                    return;
+                }
+                supplTables = new IMatrixData[] { supplDataSynth, supplDataDeg };
+            }
 
             processInfo.Progress(0);
 

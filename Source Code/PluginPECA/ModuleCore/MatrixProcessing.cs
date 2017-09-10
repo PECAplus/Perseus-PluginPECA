@@ -48,9 +48,9 @@ namespace PluginPECA.Core
             //smoothing
             parameters.AddParameterGroup(PECAParameters.GetFeatures(), "Features", false);
 
-            parameters.AddParameterGroup(PECAParameters.GetConditionalModule(), "Gene Set Enrichment Analysis", false);
+            parameters.AddParameterGroup(PECAParameters.GetConditionalModule(), "Gene Set Analysis", false);
 
-            parameters.AddParameterGroup(PECAParameters.SelectData(mdata), "Select Data", true);
+            parameters.AddParameterGroup(PECAParameters.SelectConditionalData(mdata), "Select Data", true);
 
             parameters.AddParameterGroup(PECAParameters.GetMCMCParams(), "MCMC Parameters", false);
 
@@ -60,11 +60,10 @@ namespace PluginPECA.Core
 
         public override void ProcessData(IMatrixData mdata, global::BaseLibS.Param.Parameters param, ref IMatrixData[] supplTables, ref IDocumentData[] documents, ProcessInfo processInfo)
         {
-            
 
             string geneNameColumn = mdata.StringColumnNames[param.GetParam<int>("Gene Name Column").Value];
 
-            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca.exe");
+            string defaultPECAPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\peca_core_N.exe");
 
             string workingDirectory = param.GetParam<string>("Working Directory").Value;
 
@@ -74,23 +73,34 @@ namespace PluginPECA.Core
 
             string errString;
 
-            string paramInfo = Utils.CheckCoreParameters(mdata, param);
+            ParameterWithSubParams<bool> getRNAInf = param.GetParamWithSubParams<bool>(PECAParameters.RNAInference);
 
+            string paramInfo = null; 
+
+            if (getRNAInf.Value)
+            {
+                //RNAinf checking
+                paramInfo = Utils.CheckCoreParameters(mdata, param, getRNAInf.GetSubParameters(), PECAParameters.RNAexp, null, PECAParameters.dataFormGeneric, null);
+            }
+            else
+            {
+                paramInfo = Utils.CheckCoreParameters(mdata, param, getRNAInf.GetSubParameters());
+            }
             if (paramInfo != null)
             {
                 processInfo.ErrString = paramInfo;
                 return;
             }
 
-
-            if (Utils.WriteInputFiles(mdata, param, workingDirectory, out errString) != 0)
+            //prepares the input files needed
+            if (Utils.WriteInputFilesCond(mdata, param, getRNAInf.GetSubParameters(), getRNAInf.Value, workingDirectory, out errString) != 0)
             {
                 processInfo.ErrString = errString;
                 return;
             }
 
-
-            if (Utils.WriteInputParam(param, workingDirectory) != 0)
+            //prepares the input parameters
+            if (Utils.WriteInputParam(param, getRNAInf.GetSubParameters(), workingDirectory, getRNAInf.Value) != 0)
             {
                 processInfo.ErrString = "Unable To Process the Given Parameters";
                 return;
@@ -109,51 +119,37 @@ namespace PluginPECA.Core
             }
 
             int totFDR = mdata.RowCount;
-            //breaks when user path contains space?
+
             if (ExternalProcess.RunExe(pythonFDR, null, workingDirectory, processInfo.Status, processInfo.Progress, 1, totFDR, out string processInfoErrString3) != 0)
             {
                 processInfo.ErrString = processInfoErrString3;
                 return;
             }
 
-            Utils.GetOutput(mdata, param, outputFile, geneNameColumn);
+            //reads in the output as matrix
+            if (getRNAInf.Value)
+            {
+                Utils.GetOutput(mdata, param, getRNAInf.GetSubParameters(), outputFile, geneNameColumn, PECAParameters.RNAexp, 2);
+            }
+            else
+            {
+                Utils.GetOutput(mdata, param, getRNAInf.GetSubParameters(), outputFile, geneNameColumn);
+            }
 
-            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsea);
+            ParameterWithSubParams<bool> getAnalysis = param.GetParamWithSubParams<bool>(PECAParameters.gsa);
 
             if (getAnalysis.Value)
             {
-                string modulePath = getAnalysis.GetSubParameters().GetParam<string>(PECAParameters.networkFile).Value;
-                string moduleDestination = Path.Combine(@workingDirectory, @"networkFile.txt");
-                File.Copy(modulePath, moduleDestination, true);
-
-                string convertErr = Utils.ConvertUnix2Dos(moduleDestination, processInfo);
-                if (convertErr != null)
+                IMatrixData supplData = Utils.getGSA(getAnalysis.GetSubParameters(), mdata, workingDirectory, -1, processInfo, out string gsaErrString);
+                if (gsaErrString != null)
                 {
-                    processInfo.ErrString = convertErr;
+                    processInfo.ErrString = gsaErrString;
                     return;
                 }
-
-                if (Utils.WriteCPSInputParam(getAnalysis.GetSubParameters(), workingDirectory) != 0)
-                {
-                    processInfo.ErrString = "Unable To Process the Enrichment Analysis Parameters";
-                    return;
-                }
-                string exeCPS = System.IO.Path.Combine(Directory.GetCurrentDirectory(), @".\bin\PECAInstallations\cps.exe");
-                string inputCPSLocation = "\"" + System.IO.Path.Combine(@workingDirectory, @".\cps_input") + "\"";
-                if (ExternalProcess.RunExe(exeCPS, inputCPSLocation, workingDirectory, processInfo.Status, processInfo.Progress, -1, -1, out string processInfoErrString4) != 0)
-                {
-                    processInfo.ErrString = processInfoErrString4;
-                    return;
-                }
-                //processInfo.ErrString = processInfoErrString5;
-                supplTables = new IMatrixData[] { PluginPECA.Utils.GetGOEnr(mdata, workingDirectory) };
-
+                supplTables = new IMatrixData[] { supplData };
             }
 
-
-            processInfo.Progress(0);
-
-            
+            processInfo.Progress(0);            
 
         }
 

@@ -21,7 +21,7 @@ namespace PluginPECA.ModuleR
         {
             string expSeries1 = PECAParameters.pecaRSeries1;
             string expSeries2 = PECAParameters.pecaRSeries2;
-            string commonErr = PluginPECA.Utils.CheckCommonParameters(mdata, param, expSeries1, expSeries2);
+            string commonErr = PluginPECA.Utils.CheckCommonParameters(mdata, param, param, expSeries1, expSeries2);
             if (commonErr != null) return commonErr;
             return PluginPECA.Utils.CheckTimePoints(mdata, param, expSeries1);
         }

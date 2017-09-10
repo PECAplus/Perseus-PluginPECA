@@ -11,23 +11,31 @@ namespace PluginPECA
 {
     public static class PECAParameters
     {
-        public static string smoothingPar1 = "Gaussian Kernel Signal Variance";
-        public static string smoothingPar2 = "Gaussian Kernel Lengthscale";
+        public static string RNAInference = "mRNA Level Inference";
+        public static string RNAexp = "mRNA Expression Series";
+        public static string series1 = "Expression Series 1";
+        public static string series2 = "Expression Series 2";
+
+        public static string smoothingPar1 = "Gaussian Kernel Variance Parameter";
+        public static string smoothingPar2 = "Gaussian Kernel Scale Parameter";
         public static string network = "Module";
-        public static string networkFile = "Function Annotation File";
+        public static string edgeFile = "Edge File";
+        public static string networkFile = "Biological Function Annotation File";
+
+        //not needed anymore
         public static string minNetwork = "Minimum Size of Pathways";
         public static string maxNetwork = "Maximum Size of Pathways";
-        public static string gsea = "Enrichment Analysis";
+        public static string gsa = "Gene Set Analysis";
 
         public static string fdrCutoff = "Enrichment Analysis FDR Cutoff";
         public static string backgroundPar1 = "Minimum % of Genes to Consider a Pathway";
         public static string backgroundPar2 = "Minimum Number For Hypothesis Testing";
 
-        public static string pecaRSeries1 = "Absolute mRNA Concentration Data";
+        public static string pecaRSeries1 = "mRNA Concentration Data";
 
-        public static string pecaRSeries2 = "Absolute Protein Concentration Data";
+        public static string pecaRSeries2 = "Protein Expression Data";
 
-        public static string pecaPSSeries1 = "Absolute mRNA Concentration Data";
+        public static string pecaPSSeries1 = "mRNA Concentration Data";
 
         public static string pecaPSSeries2 = "PRE/REF SILAC Data";
         public static string pecaPSSeries3 = "NEW/REF SILAC Data";
@@ -75,7 +83,7 @@ namespace PluginPECA
                 SubParams = subParamListBase,
                 ParamNameWidth = parNameWidth,
                 TotalWidth = totWidth,
-                Help = "Specification for the data input form.\nRaw: unprocessed, untransformed data.\nln: log(e) transformed data.\nlog_2: log(2) transformed data.\nlog_10:  log(10) transformed data.\nlog_custom: log(X) transformed data, where X is a specified positive real value"
+                Help = "Specification for the data input form.\nRaw: unprocessed, untransformed data.\nln: log_e transformed data.\nlog_2: log_2 transformed data.\nlog_10:  log_10 transformed data.\nlog_custom: log_X transformed data, where X is a specified positive real value"
             };
         }
 
@@ -109,7 +117,7 @@ namespace PluginPECA
             {
                 Values = expSeriesValuesList,
                 Repeats = false,
-                Help = "Expression series 2 (typically protein concentration data) which comes after expression series 1expression series 2 (typically protein concentration data) which comes after expression series 1."
+                Help = "Expression series 2 (typically protein concentration data) which comes after expression series 1."
             };
         }
 
@@ -138,6 +146,13 @@ namespace PluginPECA
             };
         }
 
+        public static FileParam GetEdgeLoc()
+        {
+            return new FileParam(edgeFile)
+            {
+                Help = "Specifies the file path of the edge file as part of biological network data that should be used for the inference of rate parameters."
+            };
+        }
 
         public static FileParam GetModuleLoc()
         {
@@ -189,9 +204,9 @@ namespace PluginPECA
 
         public static StringParam GetTimepoints()
         {
-            return new StringParam("Time Points", "0 1 2 4 6 9 12")
+            return new StringParam("Time Points", "0 1 2 3 4 5")
             {
-                Help = "Specification of the time points in the datasets.\nTime points can be in any units such as, minutes or hours, but units need to be the same across the entire list."
+                Help = "Specification of the time points in the datasets.\nTime points can be in any units such as, minutes or hours, but units need to be the same across the entire list.\nThey should be all numeric values, each separated by a whitespace"
             };
         }
 
@@ -202,7 +217,7 @@ namespace PluginPECA
         {
             return new Parameter[]
             {
-                new BoolWithSubParams(gsea)
+                new BoolWithSubParams(gsa)
                 {
                     Default = false,
                     Help = "Time-dependent functional enrichment analysis on the output matrix of PECA.\nThe result will be displayed as an additional output matrix",
@@ -229,9 +244,11 @@ namespace PluginPECA
         {
             return new Parameter[]
             {
+                GetEdgeLoc(),
                 GetModuleLoc(),
-                GetModuleMin(),
-                GetModuleMax(),
+                //not needed anymore with the current version
+                //GetModuleMin(),
+                //GetModuleMax(),
                 GetModuleFDR(),
                 GetBackground1(),
                 GetBackground2()
@@ -281,6 +298,46 @@ namespace PluginPECA
                 GetDataForm(dataForm2)
             };
 
+        }
+
+        public static Parameter[] SelectExpData(IMatrixData mdata)
+        {
+            return new Parameter[]
+            {
+                GetSeries1(mdata),
+                GetDataForm(dataForm1),
+                GetSeries2(mdata),
+                GetDataForm(dataForm2)
+            };
+
+        }
+
+        public static Parameter[] SelectRNAData(IMatrixData mdata)
+        {
+            string[] expSeriesValuesList = ArrayUtils.Concat(mdata.ColumnNames, mdata.NumericColumnNames);
+            int[] def1 = expSeriesValuesList.Length > 0 ? Enumerable.Range(0, expSeriesValuesList.Length / 2).ToArray() : new int[0];
+            return new Parameter[]
+            {
+                GetSeries(mdata, RNAexp, def1, "If mRNA Level Inference is checked, this is the selected expression/numerical columns that should be used as mRNA expression data."),
+                GetDataForm(dataFormGeneric)
+            };
+
+        }
+
+        //for mRNA level inference
+        public static Parameter[] SelectConditionalData(IMatrixData mdata)
+        {
+            return new Parameter[]
+            {
+                GetGeneNameColumn(mdata),
+                new BoolWithSubParams(RNAInference)
+                {
+                    Default = false,
+                    Help = "If checked, mRNA level inference will be performed, i.e. Expression Series 1 is assumed to be DNA concentrations with 1 as values and Expression Series 2 is set as the given mRNA Expression Series.\nIf not, Expression Series 1 and 2 are both set by the user.",
+                    SubParamsTrue = new Parameters(SelectRNAData(mdata)),
+                    SubParamsFalse = new Parameters(SelectExpData(mdata))
+                }
+            };
         }
 
         //n is the how many data

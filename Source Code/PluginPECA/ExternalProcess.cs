@@ -15,7 +15,7 @@ namespace PluginPECA
             int FDRTASK = 1;
             string pattern = @"(?<![A-Za-z0-9.])[0-9]+";
             Regex reg = new Regex(pattern);
-            Regex notWanted = new Regex("(nprot)|(data)");
+            Regex notWanted = new Regex("(nprot)|(data)|(edges)|(beta)");
 
 
             errorString = null;
