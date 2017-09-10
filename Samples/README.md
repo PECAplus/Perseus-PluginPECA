@@ -15,7 +15,7 @@
 	[x] Gene Set Analysis:
 		Biological Function Annotation File: <file path of module.txt>
 		Enrichment Analysis FDR Cutoff: 0.05
-		Minimum % of Genes to Consider a Pathway: 50
+		Minimum % of Genes to Consider a Pathway: 20
 		Minimum Number for Hypothesis Testing: 5
 	Gene Name Column: ENSG
 	[ ] mRNA Level Inference:
@@ -44,7 +44,7 @@
 	Edge File: <file path of edge.txt>
 	Biological Function Annotation File: <file path of module.txt>
 	Enrichment Analysis FDR Cutoff: 0.05
-	Minimum % of Genes to Consider a Pathway: 50
+	Minimum % of Genes to Consider a Pathway: 20
 	Minimum Number for Hypothesis Testing: 5
 	Gene Name Column: ENSG
 	[ ] mRNA Level Inference:
