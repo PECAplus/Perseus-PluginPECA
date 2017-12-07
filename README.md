@@ -37,10 +37,10 @@ Currently, the plugin is only distributed through github.
 
 To install through github:
 
-* [Download Perseus-PluginPECA ZIP](https://github.com/PECAplus/Perseus-PluginPECA/archive/master.zip)
-* Unzip `Perseus-PluginPECA-master.zip`
+* [Download Perseus-PluginPECA ZIP](https://github.com/PECAplus/Perseus-PluginPECA/releases/download/v1.0.0/pluginpeca_1.0.0.zip)
+* Unzip `pluginpeca_<version>.zip`
 * Locate the directory of `Perseus.exe`, which contains `bin` folder
-* Copy/Cut `pluginPECA.dll` file and `PECAInstallations` folder from `Perseus-PluginPECA-master\Plugin`
+* Copy/Cut `pluginPECA.dll` file and `PECAInstallations` folder from `pluginpeca_<version>.zip\Plugin`
 * Paste into the `bin` folder
 
 ## Bugs and Feedback
