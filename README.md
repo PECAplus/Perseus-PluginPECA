@@ -31,8 +31,6 @@ PERSEUS latest version (See [Perseus Download and Installation Guide](http://www
 
 ## Installing
 
-Upon publication of the PECA plus paper, the plugin will be available via the Perseus website.
-
 Currently, the plugin is only distributed through github.
 
 To install through github:
