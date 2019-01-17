@@ -716,19 +716,18 @@ namespace PluginPECA
             string[] names = ArrayUtils.SubArray(mdata.StringColumnNames, colInds);
             string[] descriptions = ArrayUtils.SubArray(mdata.StringColumnDescriptions, colInds);
             string[][] str = ArrayUtils.SubArray(mdata.StringColumns, colInds);
-            var newEx = new float[str.Length][];
+            var newEx = new double[str.Length][];
             for (int j = 0; j < str.Length; j++)
             {
-                newEx[j] = new float[str[j].Length];
+                newEx[j] = new double[str[j].Length];
                 for (int i = 0; i < newEx[j].Length; i++)
                 {
-                    float f;
-                    bool success = float.TryParse(str[j][i], out f);
-                    newEx[j][i] = success ? f : float.NaN;
+                    bool success = double.TryParse(str[j][i], out double f);
+                    newEx[j][i] = success ? f : double.NaN;
                 }
             }
-            float[,] newExp = new float[mdata.RowCount, mdata.ColumnCount + str.Length];
-            float[,] newQual = new float[mdata.RowCount, mdata.ColumnCount + str.Length];
+            double[,] newExp = new double[mdata.RowCount, mdata.ColumnCount + str.Length];
+            double[,] newQual = new double[mdata.RowCount, mdata.ColumnCount + str.Length];
             bool[,] newIsImputed = new bool[mdata.RowCount, mdata.ColumnCount + str.Length];
             for (int i = 0; i < mdata.RowCount; i++)
             {
@@ -741,7 +740,7 @@ namespace PluginPECA
                 for (int j = 0; j < newEx.Length; j++)
                 {
                     newExp[i, j + mdata.ColumnCount] = newEx[j][i];
-                    newQual[i, j + mdata.ColumnCount] = float.NaN;
+                    newQual[i, j + mdata.ColumnCount] = double.NaN;
                     newIsImputed[i, j + mdata.ColumnCount] = false;
                 }
             }
@@ -878,7 +877,6 @@ namespace PluginPECA
             data.StringColumnNames = ArrayUtils.SubList(data.StringColumnNames, nameInd);
             data.StringColumnDescriptions = ArrayUtils.SubList(data.StringColumnDescriptions, nameInd);
 
-            //hacky way of forcing the order of columns but also possibly the only way for Perseus
             List<int> toConvert = new List<int>();
             List<int> numList = new List<int>();
             int expressInd = 0;
@@ -902,14 +900,16 @@ namespace PluginPECA
             ExpressionToNumeric(Enumerable.Range(0, data.ColumnCount).ToArray(), data);
 
             data.NumericColumns = ArrayUtils.SubList(data.NumericColumns, numArr);
-            
+
+
             //change data form depending whether needed
-            if (baseVal > 0) {
+            if (baseVal > 0)
+            {
                 foreach (int col in numArr)
                 {
-                    for (int i=0; i<data.RowCount; i++)
+                    for (int i = 0; i < data.RowCount; i++)
                     {
-                        data.NumericColumns[col][i] = Math.Pow(baseVal, data.NumericColumns[col][i]); 
+                        data.NumericColumns[col][i] = Math.Pow(baseVal, data.NumericColumns[col][i]);
                     }
                 }
             }
@@ -920,9 +920,9 @@ namespace PluginPECA
             NumericToString(Enumerable.Range(0, numArr.Length).ToArray(), data);
 
 
-            for (int j=0; j<data.StringColumnCount; j++)
+            for (int j = 0; j < data.StringColumnCount; j++)
             {
-                for (int i=0; i<data.RowCount; i++)
+                for (int i = 0; i < data.RowCount; i++)
                 {
                     data.StringColumns[j][i] = string.Equals(data.StringColumns[j][i], "NaN") ? "NA" : data.StringColumns[j][i];
                 }

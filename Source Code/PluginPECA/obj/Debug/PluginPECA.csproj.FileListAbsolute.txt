@@ -39,3 +39,17 @@ C:\Users\mzhangyb\Desktop\New-Plugin\Source Code\PluginPECA\obj\Debug\PluginPECA
 C:\Users\mzhangyb\Desktop\New-Plugin\Source Code\PluginPECA\obj\Debug\PluginPECA.csproj.CoreCompileInputs.cache
 C:\Users\mzhangyb\Desktop\New-Plugin\Source Code\PluginPECA\obj\Debug\PluginPECA.dll
 C:\Users\mzhangyb\Desktop\New-Plugin\Source Code\PluginPECA\obj\Debug\PluginPECA.pdb
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PluginPECA.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PluginPECA.pdb
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\BaseLibS.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PerseusApi.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\PerseusApi.xml
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.csproj.CoreCompileInputs.cache
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\obj\Debug\PluginPECA.pdb
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\BaseLib.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\Microsoft.Windows.Shell.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\System.ValueTuple.dll
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\BaseLibS.xml
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\Microsoft.Windows.Shell.pdb
+C:\Users\mzhangyb\Desktop\Perseus-PluginPECA\Source Code\PluginPECA\bin\Debug\System.ValueTuple.xml
