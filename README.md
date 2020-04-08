@@ -27,7 +27,7 @@ See [PECAplus CLI](https://github.com/PECAplus/PECAplus_cmd_line) for Command-Li
 
 64 bit Windows with .NET Framework 4.5 or higher (See [Perseus Requirements](http://www.coxdocs.org/doku.php?id=perseus:common:download_and_installation))
 
-Perseus ~1.6v. The latest version on the website is no longer supported as the APIs used by this plugin have been deprecated.
+Perseus v1.6~. The latest version on the website is no longer supported as the APIs used by this plugin have been deprecated.
 
 ## Installing
 
